@@ -15,7 +15,7 @@ cd $DIR
 # Copy the .vimrc in this directory to the home directory.
 cp .vimrc ~/.vimrc
 # Copy the .vim folder to the home directory
-cp -r .vim ~/.vim
+cp -r .vim ~/
 # Copy the .bashrc in this directory to the home directory.
 cp .bashrc ~/.bashrc
 

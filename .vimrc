@@ -35,6 +35,9 @@ Plugin 'rdnetto/YCM-Generator'
 " Plugin for linting C++
 Plugin 'scrooloose/syntastic'
 
+" Plugin for developing with Ros
+Plugin 'taketwo/vim-ros'
+
 " Plugin for doing python
 " Plugin 'klen/python-mode'
 
@@ -215,11 +218,42 @@ set background=dark
 " Force terminal colors to 256.
 set t_Co=256
 colorscheme solarized
+" Set toggle color command (between nighttime and daytime).
+call togglebg#map("<F5>")
 
 "------------------------------------------------------------}
 " YouCompleteMe Config
 "
 " Set this for compilation flags
-let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
+let g:ycm_global_ycm_extra_conf='~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
+" Set this to make ycm a syntastic checker
+let g:ycm_register_as_syntastic_checker=1
+" Set this to use CTags
+" let g:ycm_collect_identifiers_from_tags_files=1
 
+"------------------------------------------------------------}
+" Syntastic Config
+" let g:syntastic_cpp_checkers=['clang_check', 'gcc']
+let g:syntastic_cpp_check_header=1
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_check_on_open=1
+let g:syntastic_enable_signs=1
+let g:syntastic_error_symbol = '✗'
+let g:syntastic_warning_symbol = '⚠'
+" set statusline+=%#warningmsg#
+" set statusline+=%{SyntasticStatuslineFlag()}
+" set statusline+=%*gbar
 
+"------------------------------------------------------------}
+" Vim-Ros Config
+
+" Config for YCM
+let g:ycm_semantic_triggers = {
+\   'roslaunch' : ['="', '$(', '/'],
+\   'rosmsg,rossrv,rosaction' : ['re!^', '/'],
+\ }
+
+" General config
+" let g:ros_make=current
+" let g:ros_build_system=catkin
+let g:catkin_make_options='install -DCMAKE_EXPORT_COMPILE_COMMANDS=ON'

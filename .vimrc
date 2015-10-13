@@ -29,6 +29,9 @@ Plugin 'gmarik/Vundle.vim'          " required
 " Plugin from git repo: https://github.com/Valloric/YouCompleteMe
 Plugin 'Valloric/YouCompleteMe'
 
+" Plugin for solarized colorscheme
+Plugin 'altercation/vim-colors-solarized'
+
 " Plugin to generate ycm_extra_conf.py for the project
 Plugin 'rdnetto/YCM-Generator'
 

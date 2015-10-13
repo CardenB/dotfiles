@@ -13,11 +13,11 @@ DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 cd $DIR
 # Copy the dotfiles in this directory to the proper location.
 # Copy the .vimrc in this directory to the home directory.
-cp .vimrc ~/.vimrc
+cp dot_vimrc ~/.vimrc
 # Copy the .vim folder to the home directory
-cp -r .vim ~/
+cp -r dot_vim ~/
 # Copy the .bashrc in this directory to the home directory.
-cp .bashrc ~/.bashrc
+cp dot_bashrc ~/.bashrc
 
 # Return to the original directory.
 cd $CWD

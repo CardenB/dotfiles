@@ -228,7 +228,7 @@ call togglebg#map("<F5>")
 " YouCompleteMe Config
 "
 " Set this for compilation flags
-let g:ycm_global_ycm_extra_conf='~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
+let g:ycm_global_ycm_extra_conf='~/.vim/ycm_config/cpp/.ycm_extra_conf.py'
 " Set this to make ycm a syntastic checker
 let g:ycm_register_as_syntastic_checker=1
 " Set this to use CTags

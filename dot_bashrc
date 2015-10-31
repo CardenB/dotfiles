@@ -116,4 +116,5 @@ if ! shopt -oq posix; then
   fi
 fi
 
-
+# Setup terminal colors in tmux
+alias tmux="TERM=screen-256color-bce tmux"

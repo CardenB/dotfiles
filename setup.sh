@@ -18,8 +18,6 @@ cp dot_vimrc ~/.vimrc
 cp -r dot_vim ~/
 # Copy the .bashrc in this directory to the home directory.
 cp dot_bashrc ~/.bashrc
-# Copy the .tmux.conf in this directory to the home directory
-cp dot_tmux_dot_conf ~/.tmux.conf
 
 # Return to the original directory.
 cd $CWD

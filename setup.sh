@@ -18,6 +18,8 @@ cp dot_vimrc ~/.vimrc
 cp -r dot_vim ~/
 # Copy the .bashrc in this directory to the home directory.
 cp dot_bashrc ~/.bashrc
+# Copy the .tmux.conf in this directory to the home directory to configure tmux.
+cp dot_tmux_dot_conf ~/.tmux.conf
 
 # Return to the original directory.
 cd $CWD
@@ -27,3 +29,11 @@ git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 
 # Install Vundle plugins.
 vim +PluginInstall +qall
+
+# Install TPM, a tmux plugin manager.
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+# Source config files
+source ~/.vimrc
+source ~/.bashrc
+tmux source ~/.tmux.conf
+

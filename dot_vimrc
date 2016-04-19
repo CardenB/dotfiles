@@ -38,9 +38,6 @@ Plugin 'rdnetto/YCM-Generator'
 " Plugin for linting C++
 Plugin 'scrooloose/syntastic'
 
-" Plugin for developing with Ros
-Plugin 'taketwo/vim-ros'
-
 " Plugin for doing python
 " Plugin 'klen/python-mode'
 

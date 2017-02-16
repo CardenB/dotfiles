@@ -194,12 +194,12 @@ set tabstop=4
 "
 " Map ctrl-I to clang formatting
 "
-:function FormatFile()
-:  let l:lines="all"
-:  pyf ~/.vim/clang-format.py
-:endfunction
-map <C-I> :call FormatFile()<cr>
-imap <C-I> <c-o>:call FormatFile()<cr>
+" :function FormatFile()
+" :  let l:lines="all"
+" :  pyf ~/.vim/clang-format.py
+" :endfunction
+" map <C-I> :call FormatFile()<cr>
+" imap <C-I> <c-o>:call FormatFile()<cr>
 
 
 " Map <C-L> (redraw screen) to also turn off search highlighting until the

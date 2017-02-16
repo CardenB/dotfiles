@@ -118,3 +118,9 @@ fi
 
 # Setup terminal colors in tmux
 alias tmux="TERM=screen-256color-bce tmux"
+
+# Checks if a tmux session is active. If not, starts one named 'carden'.
+# If already exists, then it attaches to 'carden'
+if [ ! $TMUX ]; then
+    tmux new-session -A -s carden
+fi

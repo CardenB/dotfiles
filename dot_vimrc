@@ -240,17 +240,3 @@ let g:syntastic_warning_symbol = '⚠'
 " set statusline+=%#warningmsg#
 " set statusline+=%{SyntasticStatuslineFlag()}
 " set statusline+=%*gbar
-
-"------------------------------------------------------------}
-" Vim-Ros Config
-
-" Config for YCM
-let g:ycm_semantic_triggers = {
-\   'roslaunch' : ['="', '$(', '/'],
-\   'rosmsg,rossrv,rosaction' : ['re!^', '/'],
-\ }
-
-" General config
-" let g:ros_make=current
-" let g:ros_build_system=catkin
-let g:catkin_make_options='install -DCMAKE_EXPORT_COMPILE_COMMANDS=ON'

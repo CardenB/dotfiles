@@ -38,6 +38,9 @@ Plugin 'rdnetto/YCM-Generator'
 " Plugin for linting C++
 Plugin 'scrooloose/syntastic'
 
+" Plugin for using grep within vim
+Plugin 'mhinz/vim-grepper'
+
 " All of your Plugins must be added before the following line
 call vundle#end()                   " required
 
@@ -219,3 +222,23 @@ let g:syntastic_warning_symbol = '⚠'
 " set statusline+=%#warningmsg#
 " set statusline+=%{SyntasticStatuslineFlag()}
 " set statusline+=%*gbar
+
+"------------------------------------------------------------}
+" Grepper Config
+"
+" Use :Grepper to open a prompt, enter your query, optionally cycle through
+" list of tools, fire up the search.
+" Use the current visual selection to pre-fill the prompt or start searching
+" immediately.
+" Use :GrepperGit, :GrepperAg, etc.. to grep with different tools built on top
+" of :Grepper. (:GrepperGit is for `git grep`)
+" See more examples here:
+" https://github.com/mhinz/vim-grepper/wiki/example-configurations-and-mappings
+"
+" let g:grepper = {}
+" Enable git grep and regular grep as grepping tools.
+let g:grepper.tools = ['git', 'grep']
+" let g:grepper.jump = 1
+" let g:grepper.next_tool = '<leader>g'
+" let g:grepper.simple_prompt = 1
+" let g:grepper.quickfix = 0

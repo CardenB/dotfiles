@@ -42,7 +42,7 @@ Plugin 'scrooloose/syntastic'
 Plugin 'mhinz/vim-grepper'
 
 " Plugin for handling git within vim
-Plugin 'tpop/vim-fugitive'
+Plugin 'tpope/vim-fugitive'
 
 " All of your Plugins must be added before the following line
 call vundle#end()                   " required

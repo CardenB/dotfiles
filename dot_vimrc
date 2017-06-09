@@ -240,7 +240,7 @@ let g:syntastic_warning_symbol = '⚠'
 "
 " let g:grepper = {}
 " Enable git grep and regular grep as grepping tools.
-let g:grepper.tools = ['git', 'grep']
+" let g:grepper.tools = ['git', 'grep']
 " let g:grepper.jump = 1
 " let g:grepper.next_tool = '<leader>g'
 " let g:grepper.simple_prompt = 1

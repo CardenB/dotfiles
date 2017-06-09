@@ -1,8 +1,24 @@
 # Config file for tmux
 
 # List of plugins
+# Use `prefix + I` to fetch plugins and install.
+# Use `prefix + alt + u` to uninstall and remove plugins that are no longer
+# listed.
+#
+# Plugin for managing plugins!
 set -g @plugin 'tmux-plugins/tpm'
+# A plugin for creating basic tmux settings that should be reasonable for
+# everyone. See more here:
+# https://github.com/tmux-plugins/tmux-sensible
 set -g @plugin 'tmux-plugins/tmux-sensible'
+# Plugin for restoring tmux configurations after closing.
+set -g @plugin 'tmux-plugins/tmux-resurrect'
+# Plugin responsible for automatically saving sessions for resurrect.
+set -g @plugin 'tmux-plugins/tmux-continuum'
+
+# Option for continuum plugin that automatically uses resurrect to restore
+# when starting. Optimal for set-and-forget behavior.
+set -g @continuum-restore 'on'
 
 # Other examples:
 # set -g @plugin 'github_username/plugin_name'

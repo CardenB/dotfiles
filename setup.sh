@@ -26,16 +26,16 @@ git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 
 # Clean unused plugins with vundle.
 # Append ! to PluginClean to auto-approve removal.
-vim +PluginClean! +q
+# +qall keeps vim from opening a session to display status of plugin clean.
+vim +PluginClean! +qall
 # Install Vundle plugins.
-# +q keeps vim from opening a vim session to display status of plugin install.
-# +all installs all plugins
+# +qall keeps vim from opening a session to display status of plugin install.
 vim +PluginInstall +qall
 
 # Install TPM, a tmux plugin manager.
 # When you open tmux, use `prefix + I` to fetch the plugins and install.
 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 # Source config files for them to take effect.
-source ~/.bashrc
+# Use `.` instead of `source` here because `source` is not found by bash.
+. ~/.bashrc
 tmux source ~/.tmux.conf
-

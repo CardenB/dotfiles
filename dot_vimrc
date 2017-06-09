@@ -41,6 +41,9 @@ Plugin 'scrooloose/syntastic'
 " Plugin for using grep within vim
 Plugin 'mhinz/vim-grepper'
 
+" Plugin for handling git within vim
+Plugin 'tpop/vim-fugitive'
+
 " All of your Plugins must be added before the following line
 call vundle#end()                   " required
 
@@ -242,3 +245,21 @@ let g:grepper.tools = ['git', 'grep']
 " let g:grepper.next_tool = '<leader>g'
 " let g:grepper.simple_prompt = 1
 " let g:grepper.quickfix = 0
+
+"------------------------------------------------------------}
+" Fugitive Config
+"
+" View any blob, tree, commit, or tag in the git repo with :Gedit (and
+" :Gsplit, :Gvsplit, :Gtabedit, ...). Edit a file in the index and write
+" to it to stage the changes. Use :Gdiff to bring up the staged version of the
+" file side by side with the working tree version with vimdiff. Bring up
+" git status with :Gstatus. Press `-` to add/reset a file's changes, or `p` to
+" add/reset `--patch`. :Gcommit to commit. Use :Gblame to vsplit a git blame.
+" :Gmove does git mv and renames teh buffer, and :Gdelete does git rm and
+" deletes the file. Use :Ggrep to search teh work tree (or any arbitrary
+" commit) with `git grep`. :Glog loads all previous revisions of a file into
+" the quickfix list for iteration through the file's evolutions. Use :Gbrowse
+" to open the web front-end for github with optional line range specified by
+" visual highlights! :Git for running any arbitrary command, and :Git! will
+" open the output of the command in a temp file.
+" See more here: https://github.com/tpope/vim-fugitive

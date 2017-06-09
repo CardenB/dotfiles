@@ -11,15 +11,13 @@ DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 
 # Move to the directory of this script.
 cd $DIR
-# Copy the dotfiles in this directory to the proper location.
-# Copy the .vimrc in this directory to the home directory.
-cp -f dot_vimrc ~/.vimrc
-# Copy the .vim folder to the home directory
-cp -r -f dot_vim ~/.vim
-# Copy the .bashrc in this directory to the home directory.
-cp -f dot_bashrc ~/.bashrc
-# Copy the .tmux.conf in this directory to the home directory to configure tmux.
-cp -f dot_tmux_dot_conf ~/.tmux.conf
+# Symlink dotfiles in this directory to the proper location.
+# This will allow you to edit files in a single place.
+# -s is arg for creating symlink, -f is for creating and updating.
+ln -sf ./dot_vimrc ~/.vimrc
+ln -sf ./dot_bashrc ~/.bashrc
+ln -sf ./dot_tmux_dot_conf ~/.tmux.conf
+ln -sf ./dot_ctags ~/.ctags
 
 # Return to the original directory.
 cd $CWD

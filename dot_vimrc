@@ -238,13 +238,22 @@ let g:syntastic_warning_symbol = '⚠'
 " See more examples here:
 " https://github.com/mhinz/vim-grepper/wiki/example-configurations-and-mappings
 "
-" let g:grepper = {}
+" Can fill out a map of grepper setttings here or set them one by one below.
+let g:grepper = {}
+"
 " Enable git grep and regular grep as grepping tools.
-" let g:grepper.tools = ['git', 'grep']
+let g:grepper.tools = ['git', 'grep']
+" Use grepper to jump to the first result that pops up in the current window.
 " let g:grepper.jump = 1
 " let g:grepper.next_tool = '<leader>g'
 " let g:grepper.simple_prompt = 1
 " let g:grepper.quickfix = 0
+"
+" This defines an |operator| "gs" that takes any |{motion}| and uses that
+" selection to populate the search prompt. The query is quoted automatically.
+" In visual mode, it uses the current selection.
+nmap gs  <plug>(GrepperOperator)
+xmap gs  <plug>(GrepperOperator)
 
 "------------------------------------------------------------}
 " Fugitive Config

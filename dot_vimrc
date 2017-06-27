@@ -41,6 +41,9 @@ Plugin 'mhinz/vim-grepper'
 " Plugin for handling git within vim
 Plugin 'tpope/vim-fugitive'
 
+" Plugin for fuzzy searching files.
+Plugin 'ctrlpvim/ctrlp.vim'
+
 " All of your Plugins must be added before the following line
 call vundle#end()                   " required
 

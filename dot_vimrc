@@ -272,3 +272,13 @@ xmap gs  <plug>(GrepperOperator)
 " visual highlights! :Git for running any arbitrary command, and :Git! will
 " open the output of the command in a temp file.
 " See more here: https://github.com/tpope/vim-fugitive
+
+"------------------------------------------------------------}
+" CtrlP Config
+"
+" Press <c-p> for fuzzy searching. With the quickfix window open, press <c-d>
+" to switch to filename only searching.
+"
+" Fix the max file limit which makes things slower but prevents files from
+" not being found.
+let g:ctrlp_max_files=0

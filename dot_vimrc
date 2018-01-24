@@ -160,10 +160,9 @@ set pastetoggle=<F11>
 set shiftwidth=2
 set softtabstop=2
 set expandtab
-" Indentation settings for using hard tabs for indent. Display tabs as
-" two characters wide.
-set shiftwidth=2
-set tabstop=2
+
+" For python filetypes set spacing to 4.
+au Filetype python setl et sts=4 ts=4 sw=4
 
 
 "------------------------------------------------------------
@@ -173,15 +172,46 @@ set tabstop=2
 " Map Y to act like D and C, i.e. to yank until EOL, rather than act as yy,
 " which is the default
 "map Y y$
-"
-" Map ctrl-I to clang formatting
-"
-" :function FormatFile()
-" :  let l:lines="all"
-" :  pyf ~/.vim/clang-format.py
-" :endfunction
-" map <C-I> :call FormatFile()<cr>
-" imap <C-I> <c-o>:call FormatFile()<cr>
+
+:function! FormatEntirePythonFile()
+:  let l:lines="all"
+:  py3f ~/.vim/autoformat_python.py
+:endfunction
+:function! FormatPythonFileForLines()
+:  py3f ~/.vim/autoformat_python.py
+:endfunction
+" format all lines for python files.
+autocmd FileType python nnoremap <silent> <S-F> :call FormatEntirePythonFile()<cr>
+" Format highlighted lines for python files.
+autocmd FileType python vnoremap <silent> <S-F> :call FormatPythonFileForLines()<cr>
+
+let g:clang_format_path='clang-format-3.6'
+:function! FormatFile()
+:  let l:lines="all"
+:  py3f ~/.vim/clang-format.py
+:endfunction
+" Format entire file when no lines are highlighted.
+autocmd FileType cpp nnoremap <silent> <S-F> :call FormatFile()<cr>
+" Format only highlighted lines.
+autocmd FileType cpp vnoremap <silent> <S-F> :py3f ~/.vim/clang-format.py<cr>
+" Remaps gf with .pb.h -> .proto support
+function! GotoProtoDef()
+:  let l:fname=expand('<cfile>')
+:  let l:fname = substitute(l:fname, ".pb.h", ".proto", "")
+:  execute 'edit' l:fname
+endfunction
+nnoremap gp :call GotoProtoDef()<CR>
+
+function! SwitchSourceHeader()
+  "update!
+  if (expand ("%:e") == "cpp")
+    find %:t:r.h
+  else
+    find %:t:r.cpp
+  endif
+endfunction
+
+nmap ,s :call SwitchSourceHeader()<CR>
 
 
 " Map <C-L> (redraw screen) to also turn off search highlighting until the
@@ -210,7 +240,11 @@ let g:ycm_global_ycm_extra_conf='~/.vim/ycm_config/cpp/.ycm_extra_conf.py'
 " Set this to make ycm a syntastic checker
 let g:ycm_register_as_syntastic_checker=1
 " Set this to use CTags
-let g:ycm_collect_identifiers_from_tags_files=1
+" let g:ycm_collect_identifiers_from_tags_files=1
+let g:ycm_goto_buffer_command = 'horizontal-split'
+nnoremap <C-\> :YcmCompleter GoToDefinition<CR>
+nnoremap <bar> :YcmCompleter GoToDeclaration<CR>
+nnoremap { :YcmCompleter GetType<CR>
 
 "------------------------------------------------------------}
 " Syntastic Config
@@ -222,6 +256,7 @@ let g:syntastic_check_on_open=1
 let g:syntastic_enable_signs=1
 let g:syntastic_error_symbol = '✗'
 let g:syntastic_warning_symbol = '⚠'
+let g:syntastic_python_checkers=['pep8']
 " set statusline+=%#warningmsg#
 " set statusline+=%{SyntasticStatuslineFlag()}
 " set statusline+=%*gbar
@@ -239,10 +274,10 @@ let g:syntastic_warning_symbol = '⚠'
 " https://github.com/mhinz/vim-grepper/wiki/example-configurations-and-mappings
 "
 " Can fill out a map of grepper setttings here or set them one by one below.
-let g:grepper = {}
+let g:grepper = {'operator': {'tools': ['rg']}}
 "
 " Enable git grep and regular grep as grepping tools.
-let g:grepper.tools = ['git', 'grep']
+let g:grepper.tools = ['rg', 'git', 'grep']
 " Use grepper to jump to the first result that pops up in the current window.
 " let g:grepper.jump = 1
 " let g:grepper.next_tool = '<leader>g'

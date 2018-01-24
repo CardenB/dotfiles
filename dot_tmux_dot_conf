@@ -2,6 +2,7 @@
 
 # List of plugins
 # Use `prefix + I` to fetch plugins and install.
+# Use `prefix + U` to update installed plugins.
 # Use `prefix + alt + u` to uninstall and remove plugins that are no longer
 # listed.
 #
@@ -13,6 +14,7 @@ set -g @plugin 'tmux-plugins/tpm'
 set -g @plugin 'tmux-plugins/tmux-sensible'
 # Plugin for restoring tmux configurations after closing.
 set -g @plugin 'tmux-plugins/tmux-resurrect'
+set -g @resurrect-save-shell-history 'on'
 # Plugin responsible for automatically saving sessions for resurrect.
 set -g @plugin 'tmux-plugins/tmux-continuum'
 
@@ -20,10 +22,48 @@ set -g @plugin 'tmux-plugins/tmux-continuum'
 # when starting. Optimal for set-and-forget behavior.
 set -g @continuum-restore 'on'
 
+# Reduces lag for escape key presses
+set -g escape-time 10
+
+# Rate limits to prevent freezing on too much stdout
+setw -g c0-change-trigger 10
+setw -g c0-change-interval 250
+
 # Other examples:
 # set -g @plugin 'github_username/plugin_name'
 # set -g @plugin 'git@github.com/user/plugin'
 # set -g @plugin 'git@bitbucket.com/user/plugin'
+
+# Needed to enable mouse scrolling
+set -g mode-mouse on
+set -g mouse-resize-pane on
+set -g mouse-select-pane on
+set -g mouse-select-window on
+
+# Enable copy over ssh with iterm2
+setw -g mode-keys vi
+bind P paste-buffer
+bind-key -t vi-copy 'v' begin-selection
+bind-key -t vi-copy 'y' copy-selection
+bind-key -t vi-copy 'V' rectangle-toggle
+# For tmux 2.4 or newer, replace the previous 3 lines with the following 3
+# lines:
+# bind-key -T copy-mode-vi v send-keys -X begin-selection
+# bind-key -T copy-mode-vi y send-keys -X copy-selection
+# bind-key -T copy-mode-vi r send-keys -X rectangle-toggle
+
+# Turn off aggressive resize so that tmux can work with iterm2
+setw -g aggressive-resize off
+
+# sync panes
+# bind-key g set-window-option synchronize-panes
+#
+# # increase history
+set-option -g history-limit 30000
+
+# #clear history
+# bind -n C-l send-keys -R \; send-keys C-l \; clear-history
+# bind C-l clear-history
 
 # Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
 run '~/.tmux/plugins/tpm/tpm'

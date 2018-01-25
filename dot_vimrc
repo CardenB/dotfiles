@@ -46,11 +46,11 @@ Plugin 'ctrlpvim/ctrlp.vim'
 
 " All of your Plugins must be added before the following line
 call vundle#end()                   " required
-
 " Attempt to determine the type of a file based on its name and possibly its
 " contents. Use this to allow intelligent auto-indenting for each filetype,
 " and for plugins that are filetype specific.
 filetype indent plugin on           " required
+
 " To ignore plugin indent changes, instead use:
 "filetype plugin on                 " required
 "
@@ -103,6 +103,12 @@ set hlsearch
 " such, it may be a good idea to disable them and use the securemodelines
 " script, <http://www.vim.org/scripts/script.php?script_id=1876>.
 " set nomodeline
+
+" Fold all methods according to the syntax of the file.
+set foldmethod=syntax
+
+" Enables mouse scrolling and selection in vim.
+set mouse=a
 
 
 "------------------------------------------------------------
@@ -161,9 +167,7 @@ set shiftwidth=2
 set softtabstop=2
 set expandtab
 
-" For python filetypes set spacing to 4.
-au Filetype python setl et sts=4 ts=4 sw=4
-
+" Python tabstops are set in ~/.vim/ftplugin/python.vim
 
 "------------------------------------------------------------
 " Mappings 

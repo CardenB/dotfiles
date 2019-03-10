@@ -1,0 +1,28 @@
+[user]
+  name = cardenb
+  email = carden@zoox.com
+[core]
+  editor = vim
+  excludesfile = /home/carden/.gitignore
+[credential]
+  helper = cache --timeout=86400
+[push]
+  default = matching
+[diff]
+  tool = vimdiff
+[merge]
+  tool = vimdiff
+[hub]
+  protocol = https
+  host = git.zooxlabs.com
+[fetch]
+  prune = true
+[alias]
+  create = checkout --track -b
+  sup = branch --set-upstream-to 
+  oldest-ancestor = !bash -c 'diff --old-line-format= --new-line-format= <(git rev-list --first-parent \"${1:-master}\") <(git rev-list --first-parent \"${2:-HEAD}\") | head -1' -
+  pushf = push --force-with-lease
+  amend = commit --amend -C HEAD
+  pullr = pull --rebase=preserve
+  refresh = remote update -p
+  pushh = push origin HEAD

@@ -33,7 +33,7 @@ def print_tree(dag, key, depth=0, rebase=False, repo=None):
                     raise CascadeException('Must also supply a repo!')
                 repo.git.checkout(branch)
                 repo.git.pull()
-            print_tree(dag, bname, depth+1)
+            print_tree(dag, bname, depth+1, rebase=rebase, repo=repo)
 
 
 def build_git_dag(r):

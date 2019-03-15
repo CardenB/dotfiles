@@ -127,7 +127,8 @@ def print_tree(dag, current_branch_name, depth, repo, cascade=False):
                               'your own.', 'red'))
                 repo.git.rebase(abort=True)
                 return False
-        return print_tree(dag, bname, depth + 1, repo, cascade=cascade)
+        if not print_tree(dag, bname, depth + 1, repo, cascade=cascade):
+            return False
     return True
 
 
@@ -148,7 +149,6 @@ def build_git_dag(r):
         tb = b.tracking_branch()
         if tb:
             tbname = branch_name(tb)
-            test = ''
             if tbname.startswith('origin'):
                 roots.append(tbname)
             dag[tbname].append(b)

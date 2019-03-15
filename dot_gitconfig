@@ -17,12 +17,16 @@
   host = git.zooxlabs.com
 [fetch]
   prune = true
+[pull]
+  rebase = preserve
+[branch]
+  autoSetupMerge = always
 [alias]
-  create = checkout --track -b
   sup = branch --set-upstream-to 
-  oldest-ancestor = !bash -c 'diff --old-line-format= --new-line-format= <(git rev-list --first-parent \"${1:-master}\") <(git rev-list --first-parent \"${2:-HEAD}\") | head -1' -
   pushf = push --force-with-lease
+  pushh = push origin HEAD
+  pushhf = push --force-with-lease origin HEAD
   amend = commit --amend -C HEAD
+  oldest-ancestor = !bash -c 'diff --old-line-format= --new-line-format= <(git rev-list --first-parent \"${1:-master}\") <(git rev-list --first-parent \"${2:-HEAD}\") | head -1' -
   pullr = pull --rebase=preserve
   refresh = remote update -p
-  pushh = push origin HEAD

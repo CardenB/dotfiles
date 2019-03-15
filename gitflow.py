@@ -95,11 +95,15 @@ def print_tree(dag, current_branch_name, depth, repo, cascade=False):
     active_branch = active_branch_from_repo(repo)
     # Do not print branch if it is not in the flow dag.
     if current_branch_name not in dag:
-        return
+        return True
     if depth == 0:
         print(create_branch_str(current_branch_name, active_branch, depth))
-        print_tree(dag, current_branch_name, depth + 1, repo, cascade=cascade)
-        return
+        return print_tree(
+            dag,
+            current_branch_name,
+            depth + 1,
+            repo,
+            cascade=cascade)
     # Recurively print branches in the flow dag.
     for branch in dag[current_branch_name]:
         bname = branch_name(branch)
@@ -114,8 +118,17 @@ def print_tree(dag, current_branch_name, depth, repo, cascade=False):
                 cur_branch=bname,
                 parent_branch=branch_name(branch.tracking_branch())))
             repo.git.checkout(branch)
-            repo.git.pull(rebase='preserve')
-        print_tree(dag, bname, depth + 1, repo, cascade=cascade)
+            try:
+                repo.git.pull(rebase='preserve')
+            except git.GitCommandError as e:
+                print(colored('Failed cascade due to error:', 'red'))
+                print(colored(str(e), 'yellow'))
+                print(colored('Aborting cascade. Please resolve conflicts on '
+                              'your own.', 'red'))
+                repo.git.rebase(abort=True)
+                return False
+        return print_tree(dag, bname, depth + 1, repo, cascade=cascade)
+    return True
 
 
 def build_git_dag(r):
@@ -137,7 +150,6 @@ def build_git_dag(r):
             tbname = branch_name(tb)
             test = ''
             if tbname.startswith('origin'):
-                print('remote: {}'.format(tbname))
                 roots.append(tbname)
             dag[tbname].append(b)
         else:
@@ -148,7 +160,13 @@ def build_git_dag(r):
 def print_dag(dag, roots, repo, cascade):
     # Begin traversing the tree from the top level branches.
     for root_branch_name in roots:
-        print_tree(dag, root_branch_name, depth=0, repo=repo, cascade=cascade)
+        if not print_tree(
+                dag,
+                root_branch_name,
+                depth=0,
+                repo=repo,
+                cascade=cascade):
+            return
 
 
 def parse_args(argv):

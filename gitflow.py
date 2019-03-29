@@ -103,6 +103,22 @@ def active_branch_from_repo(repo, verbose=False):
         return None
 
 
+def refresh_branch(branch, repo):
+    try:
+        repo.remote().fetch(branch_name(branch))
+        cmd = [
+            'git',
+            'reset',
+            '--keep',
+            'origin/{}'.format(branch_name(branch))
+        ]
+        repo.git.execute(cmd)
+    except Exception as e:
+        print('Failed to refresh {} with error:\n{}'.format(
+            branch_name(branch),
+            colored(str(e), 'red')))
+
+
 def print_tree(dag, current_branch_name, depth, repo, cascade=False):
     """
     Prints the git flow dependency tree recursively.
@@ -210,6 +226,7 @@ def parse_args(argv):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--cascade', default=False, action='store_true')
     parser.add_argument('--branch', default=None)
+    parser.add_argument('--refresh', default=False, action='store_true')
     return parser.parse_args(argv)
 
 
@@ -223,6 +240,11 @@ def main(argv=sys.argv[1:]):
     repo_dir = cwd
     repo = git.Repo(repo_dir)
     dag, roots = build_git_dag(repo)
+
+    if args.refresh:
+        active_branch = active_branch_from_repo(repo, verbose=True)
+        refresh_branch(active_branch, repo)
+
 
     if args.branch:
         roots = [args.branch]

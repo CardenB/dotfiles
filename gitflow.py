@@ -26,30 +26,62 @@ def branch_name(branch):
     if branch is None:
         return None
     name = branch.name.lstrip('./')
-    # origin_str = 'origin/'
-    # if name.startswith(origin_str):
-    #     name = name[len(origin_str):]
     return name
 
 
-def commit_delta(branch, repo):
-    cur_branch = branch.name
-    parent_branch = branch.tracking_branch()
-    # cmd = ['git', 'rev-list', '--count', '--left-right', 'master...origin/master']
-    # print(dir(branch))
-    print(branch.commit.count(parent_branch.commit))
-    # print(repo.rev_list('--count --left-right master...origin/master'))
-    # print(git.execute(cmd))
-    return
+def commit_delta_by_branch_name(cur_branch_name, parent_branch_name, repo):
+    cmd = [
+        'git',
+        'rev-list',
+        '--count',
+        '--left-right',
+        '{}...{}'.format(cur_branch_name,
+                         parent_branch_name)
+    ]
+    try:
+        delta_str = repo.git.execute(cmd)
+        parent_divergence, cur_branch_divergence = [
+                int(count.strip()) for count in delta_str.split()]
+        return parent_divergence, cur_branch_divergence
+    except Exception as e:
+        print("Failed to calculate status for branch, {}, and parent branch, "
+              "{}. Error:\n{}".format(cur_branch_name, parent_branch_name, e))
+        return 0, 0
 
 
-def create_branch_str(bname, active_branch, depth):
+def commit_delta_by_branch(cur_branch, repo):
+    cur_branch_name = branch_name(cur_branch)
+    parent_branch_name = branch_name(cur_branch.tracking_branch())
+    return commit_delta_by_branch_name(cur_branch_name,
+                                       parent_branch_name,
+                                       repo)
+
+
+def create_branch_str(bname, active_branch, depth, parent_bname='', repo=None):
     # Create a string with whitespace representing depth.
     tabstr = ''.join(['  '] * depth)
     if depth == 0:
         branch_str = ' {branch}'.format(tabstr, branch=bname)
     else:
         branch_str = '{} |-> {branch}'.format(tabstr, branch=bname)
+
+    # If given enough information, print the status relative to the parent.
+    if parent_bname and repo:
+        (cur_ahead,
+         parent_ahead) = commit_delta_by_branch_name(bname,
+                                                     parent_bname,
+                                                     repo)
+        branch_str += '  '
+        if parent_ahead:
+            parent_ahead_str = colored('-{}'.format(str(parent_ahead)), 'red')
+        else:
+            parent_ahead_str = '-{}'.format(str(parent_ahead))
+        if cur_ahead:
+            cur_ahead_str = colored('+{}'.format(str(cur_ahead)), 'green')
+        else:
+            cur_ahead_str = '-{}'.format(str(cur_ahead))
+        branch_str += '({}, {})'.format(parent_ahead_str, cur_ahead_str)
+
     # Highlight the current branch in terminal if it is currently checked
     # out.
     active_bname = branch_name(active_branch)
@@ -108,7 +140,12 @@ def print_tree(dag, current_branch_name, depth, repo, cascade=False):
     for branch in dag[current_branch_name]:
         bname = branch_name(branch)
         # Print the final branch string to terminal.
-        print(create_branch_str(bname, active_branch, depth))
+        print(
+            create_branch_str(bname,
+                              active_branch,
+                              depth,
+                              branch_name(branch.tracking_branch()),
+                              repo))
 
         # Perform the cascaded rebase if specified.
         if (cascade):

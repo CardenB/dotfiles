@@ -172,7 +172,7 @@ def print_tree(dag, current_branch_name, depth, repo, cascade=False):
                 parent_branch=branch_name(branch.tracking_branch())))
             repo.git.checkout(branch)
             try:
-                repo.git.pull(rebase='preserve')
+                repo.git.rebase(quiet=True)
             except git.GitCommandError as e:
                 print(colored('Failed cascade due to error:', 'red'))
                 print(colored(str(e), 'yellow'))
@@ -240,21 +240,23 @@ def main(argv=sys.argv[1:]):
     repo_dir = cwd
     repo = git.Repo(repo_dir)
     dag, roots = build_git_dag(repo)
+    initial_active_branch = active_branch_from_repo(repo, verbose=True)
 
     if args.refresh:
-        active_branch = active_branch_from_repo(repo, verbose=True)
-        refresh_branch(active_branch, repo)
+        refresh_branch(initial_active_branch, repo)
 
 
     if args.branch:
         roots = [args.branch]
     elif args.cascade:
-        active_branch = active_branch_from_repo(repo, verbose=True)
-        if active_branch is not None:
-            roots = [branch_name(active_branch)]
+        if initial_active_branch is not None:
+            roots = [branch_name(initial_active_branch)]
     print_dag(dag, roots, repo, args.cascade)
     # If performing a cascade, print out status again.
     if args.cascade:
+        # If cascaded, return to the original branch.
+        repo.git.checkout(initial_active_branch)
+
         print('Status after cascade:')
         print_dag(dag, roots, repo, False)
 

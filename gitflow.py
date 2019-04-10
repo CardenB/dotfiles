@@ -44,9 +44,7 @@ def commit_delta_by_branch_name(cur_branch_name, parent_branch_name, repo):
                 int(count.strip()) for count in delta_str.split()]
         return parent_divergence, cur_branch_divergence
     except Exception as e:
-        print("Failed to calculate status for branch, {}, and parent branch, "
-              "{}. Error:\n{}".format(cur_branch_name, parent_branch_name, e))
-        return 0, 0
+        return None, None
 
 
 def commit_delta_by_branch(cur_branch, repo):
@@ -74,13 +72,18 @@ def create_branch_str(bname, active_branch, depth, parent_bname='', repo=None):
         branch_str += '  '
         if parent_ahead:
             parent_ahead_str = colored('-{}'.format(str(parent_ahead)), 'red')
-        else:
+        elif parent_ahead == 0:
             parent_ahead_str = '-{}'.format(str(parent_ahead))
         if cur_ahead:
             cur_ahead_str = colored('+{}'.format(str(cur_ahead)), 'green')
-        else:
+        elif cur_ahead == 0:
             cur_ahead_str = '-{}'.format(str(cur_ahead))
-        branch_str += '({}, {})'.format(parent_ahead_str, cur_ahead_str)
+
+        if cur_ahead is None or parent_ahead is None:
+            branch_str += "(Upstream Branch Not Found)"
+            branch_str = colored(branch_str, 'red')
+        else:
+            branch_str += '({}, {})'.format(parent_ahead_str, cur_ahead_str)
 
     # Highlight the current branch in terminal if it is currently checked
     # out.

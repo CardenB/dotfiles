@@ -179,10 +179,12 @@ def print_tree(dag, current_branch_name, depth, repo, cascade=False):
             except git.GitCommandError as e:
                 print(colored('Failed cascade due to error:', 'red'))
                 print(colored(str(e), 'yellow'))
-                print(colored('Aborting cascade. Please resolve conflicts on '
-                              'your own.', 'red'))
+                print(colored('Aborting cascade for this branch. '
+                              'Please resolve conflicts on your own.',
+                              'red'))
+                print("Continuing to next subtree...")
                 repo.git.rebase(abort=True)
-                return False
+                continue
         if not print_tree(dag, bname, depth + 1, repo, cascade=cascade):
             return False
     return True

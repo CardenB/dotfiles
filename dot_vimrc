@@ -41,8 +41,24 @@ Plugin 'mhinz/vim-grepper'
 " Plugin for handling git within vim
 Plugin 'tpope/vim-fugitive'
 
+" Plugin for handling github from vim-fugitive.
+" Enables features like `:Gbrowse`.
+Plugin 'tpope/vim-rhubarb'
+
 " Plugin for fuzzy searching files.
 Plugin 'ctrlpvim/ctrlp.vim'
+
+" Plugin for vue.js syntax highlighting.
+Plugin 'posva/vim-vue'
+Plugin 'leafgarland/typescript-vim'
+
+" Plugin for faster ctrlp fuzzy searching.
+" Disabled in favor of fzf.
+" Plugin 'wincent/command-t'
+
+" Plugin for faster cmdt fuzzy searching.
+Plugin 'junegunn/fzf'
+Plugin 'junegunn/fzf.vim'
 
 " All of your Plugins must be added before the following line
 call vundle#end()                   " required
@@ -172,10 +188,79 @@ set expandtab
 "------------------------------------------------------------
 " Mappings 
 "
+" Type `gb` to go to the BUILD file for this file.
+function! GoToBuild()
+python3 << EOF
+import vim
+import os.path
+
+def look_above(filepath):
+  dirpath, _, basename = fn.rpartition('/')
+  buildfile = os.path.join(dirpath, 'BUILD')
+  return os.path.exists(buildfile), buildfile, dirpath
+
+try:
+  fn = vim.current.buffer.name
+  _, _, basename = fn.rpartition('/')
+  while fn:
+    exists, buildfile, fn = look_above(fn)
+    if exists:
+      print("found!!!",buildfile)
+      vim.command('edit ' + buildfile)
+      vim.command('call search("\\"' + basename + '\\"")')
+      break
+except Exception as e:
+   print("Something went wrong: " + str(e))
+EOF
+endfunction
+nnoremap gb :call GoToBuild()<cr>
+
 " Useful mappings
 " Map Y to act like D and C, i.e. to yank until EOL, rather than act as yy,
 " which is the default
-"map Y y$
+nmap Y y$
+
+" Shitty decorator function to call some function with a confirm prompt.
+" Only guaranteed to work if you have two options, hence the Binary.
+" :input func: Function to call if The first answer is chosen.
+"              Ex: function('tabclose')
+" :input text: String confirmation dialog message.
+" :input options: Confirmation options. Ex: '&Yes\n&No' gives a yes or no
+"                 choice.
+:function! BinaryConfirmDecorator(func, text, options) 
+:  if confirm(a:text, a:options, 1) == 1
+:    call a:func()
+:  endif
+:endfunction
+
+:function! CloseTab()
+:  tabc
+:endfunction
+:function! ConfirmCloseTab()
+:  call BinaryConfirmDecorator(function("CloseTab"), "Close Tab?", "&Yes\n&No")
+:endfunction
+nnoremap ,w :call ConfirmCloseTab()<cr>
+
+" Create a function to reload vimrc. Checks if it already exists to avoid
+" redefining the function during the function call.
+:if !exists("*SourceVimrc")
+:  function! SourceVimrc()
+:    so ~/.vimrc
+:  endfunction
+:endif
+nnoremap ,, :call SourceVimrc()<cr>
+
+
+" Map ctrl-I to clang formatting
+"
+:function! GenerateCompileCommands()
+:  let l:fname=expand('%:p')
+:  py3f ~/.vim/generate_compile_commands_from_filename.py
+:  call input('Press any key to continue')
+:  YcmRestartServer
+:  redraw!
+:endfunction
+map <C-y> :call GenerateCompileCommands()<cr>
 
 :function! FormatEntirePythonFile()
 :  let l:lines="all"
@@ -207,11 +292,29 @@ endfunction
 nnoremap gp :call GotoProtoDef()<CR>
 
 function! SwitchSourceHeader()
-  "update!
-  if (expand ("%:e") == "cpp")
-    find %:t:r.h
+  " Get the current file extension. To see what this command is doing,
+  " see :help expand.
+  let l:cur_ext=expand("%:e")
+  " See if we have a source file (ending in .cpp or .cc).
+  if (expand ("%:e") == "cpp" || expand ("%:e") == "cc")
+    " %:t gives the basename with extension, :r trims the extension.
+    " Try searching for both .h and .hpp extensions, and open the first file
+    " that is found.
+    let l:h_path=expand("%:r") . ".h"
+    let l:hpp_path=expand("%:r") . ".hpp"
+    if filereadable(h_path)
+      find %:t:r.h
+    elseif filereadable(hpp_path)
+      find %:t:r.hpp
+    endif
   else
-    find %:t:r.cpp
+    let l:cpp_path=expand("%:r") . ".cpp"
+    let l:cc_path=expand("%:r") . ".cc"
+    if filereadable(cpp_path)
+      find %:t:r.cpp
+    elseif filereadable(cc_path)
+      find %:t:r.cc
+    endif
   endif
 endfunction
 
@@ -230,8 +333,10 @@ set colorcolumn=80
 " Setup solorized color scheme
 syntax enable
 set background=dark
-" Force terminal colors to 256.
-set t_Co=256
+" Force terminal colors to 16.
+set t_Co=16
+let g:solarized_termtrans = 1
+let g:solarized_termcolors=16
 colorscheme solarized
 " Set toggle color command (between nighttime and daytime).
 call togglebg#map("<F5>")
@@ -240,27 +345,30 @@ call togglebg#map("<F5>")
 " YouCompleteMe Config
 "
 " Set this for compilation flags
-let g:ycm_global_ycm_extra_conf='~/.vim/ycm_config/cpp/.ycm_extra_conf.py'
+" let g:ycm_global_ycm_extra_conf='~/.vim/ycm_config/cpp/.ycm_extra_conf.py'
+let g:ycm_global_ycm_extra_conf='~/.ycm_extra_conf.py'
 " Set this to make ycm a syntastic checker
-let g:ycm_register_as_syntastic_checker=1
+let g:ycm_register_as_syntastic_checker=0
 " Set this to use CTags
 " let g:ycm_collect_identifiers_from_tags_files=1
 let g:ycm_goto_buffer_command = 'horizontal-split'
 nnoremap <C-\> :YcmCompleter GoToDefinition<CR>
 nnoremap <bar> :YcmCompleter GoToDeclaration<CR>
-nnoremap { :YcmCompleter GetType<CR>
+nnoremap ,y :YcmCompleter FixIt<CR>
+nnoremap ,t :YcmCompleter GetType<CR>
+nnoremap ,d :YcmCompleter GetDoc<CR>
 
 "------------------------------------------------------------}
 " Syntastic Config
 "
-" let g:syntastic_cpp_checkers=['clang_check', 'gcc']
+let g:syntastic_cpp_checkers=['clang_check']
 let g:syntastic_cpp_check_header=1
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_check_on_open=1
 let g:syntastic_enable_signs=1
 let g:syntastic_error_symbol = '✗'
 let g:syntastic_warning_symbol = '⚠'
-let g:syntastic_python_checkers=['pep8']
+let g:syntastic_python_checkers=['pep8', 'flake8']
 " set statusline+=%#warningmsg#
 " set statusline+=%{SyntasticStatuslineFlag()}
 " set statusline+=%*gbar
@@ -313,6 +421,14 @@ xmap gs  <plug>(GrepperOperator)
 " See more here: https://github.com/tpope/vim-fugitive
 
 "------------------------------------------------------------}
+" Rhubarb Config
+"
+" Enable vim-fugitive to use Gbrose properly.
+" See more here: https://github.com/tpope/vim-fugitive
+" To get this to work using git enterprise, you must add the base url here.
+" let g:github_enterprise_urls = ['']
+
+"------------------------------------------------------------}
 " CtrlP Config
 "
 " Press <c-p> for fuzzy searching. With the quickfix window open, press <c-d>
@@ -321,3 +437,60 @@ xmap gs  <plug>(GrepperOperator)
 " Fix the max file limit which makes things slower but prevents files from
 " not being found.
 let g:ctrlp_max_files=0
+let g:ctrlp_types = ['buf', 'mru', 'fil']
+
+"------------------------------------------------------------}
+" CmdT Config
+"
+"
+" The following mappings are active when the prompt has focus:
+" 
+"     <BS>        delete the character to the left of the cursor
+"     <Del>       delete the character at the cursor
+"     <Left>      move the cursor one character to the left
+"     <C-h>       move the cursor one character to the left
+"     <Right>     move the cursor one character to the right
+"     <C-l>       move the cursor one character to the right
+"     <C-a>       move the cursor to the start (left)
+"     <C-e>       move the cursor to the end (right)
+"     <C-u>       clear the contents of the prompt
+"     <Tab>       change focus to the file listing
+"
+" The following mappings are active when the file listing has focus:
+" 
+"     <Tab>       change focus to the prompt
+" 
+" The following mappings are active when either the prompt or the file listing
+" has focus:
+" 
+"     <CR>        open the selected file
+"     <C-CR>      open the selected file in a new split window
+"     <C-s>       open the selected file in a new split window
+"     <C-v>       open the selected file in a new vertical split window
+"     <C-t>       open the selected file in a new tab
+"     <C-d>       delete the selected buffer
+"     <C-j>       select next file in the file listing
+"     <C-n>       select next file in the file listing
+"     <Down>      select next file in the file listing
+"     <C-k>       select previous file in the file listing
+"     <C-p>       select previous file in the file listing
+"     <Up>        select previous file in the file listing
+"     <C-f>       flush the cache (see |:CommandTFlush| for details)
+"     <C-q>       place the current matches in the quickfix window
+"     <C-c>       cancel (dismisses file listing)
+" 
+" The following is also available on terminals which support it:
+" 
+"     <Esc>       cancel (dismisses file listing)
+" 
+" 
+" Fix the max file limit which makes things slower but prevents files from
+" not being found.
+let g:CommandTMaxFiles=900000
+
+
+"------------------------------------------------------------}
+" FZF Config
+"
+" Map file search to <leader>f
+nmap <leader>f :GFiles<cr>

@@ -226,12 +226,46 @@ def print_dag(dag, roots, repo, cascade):
                 cascade=cascade):
             return
 
+def checkout(branch_name, repo, fail=True):
+    """
+    Checkout a branch with some exception handling to check for branch
+    existance.
+
+    :input fail: If True, will raise an exception on failure. Otherwise will
+                 return a boolean to determine checkout success.
+
+    :return: Boolean to indicate checkout success.
+    """
+    try:
+        repo.git.checkout(branch_name)
+    except repo.exc.GitCommandError as e:
+        print("Branch, {}, likely does not exist".format(branch_name))
+        if fail:
+            raise e
+        return False
+    return True
+
+
 
 def parse_args(argv):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--cascade', default=False, action='store_true')
-    parser.add_argument('--branch', default=None)
-    parser.add_argument('--refresh', default=False, action='store_true')
+    parser.add_argument(
+        '--cascade',
+        default=False,
+        action='store_true',
+        help="When specified, will rebase all downstream branches from this "
+        "branch.")
+    parser.add_argument(
+        '--branch',
+        default=None,
+        help="When specified, will print the git dag starting from this "
+        "branch. Will also cascade from this branch only when specified."
+        "Defaults to currently checked out branch.")
+    parser.add_argument(
+        '--refresh',
+        default=False,
+        action='store_true',
+        help="Updates the specified branch with latest origin.")
     return parser.parse_args(argv)
 
 
@@ -245,17 +279,27 @@ def main(argv=sys.argv[1:]):
     repo_dir = cwd
     repo = git.Repo(repo_dir)
     dag, roots = build_git_dag(repo)
+
+    # By default, start with the currently checked out branch.
     initial_active_branch = active_branch_from_repo(repo, verbose=True)
+    active_branch_name = None
+    if initial_active_branch:
+        active_branch_name = branch_name(initial_active_branch)
+
+    if not args.branch:
+        args.branch = active_branch_name
+    else:
+        # Branch names to start dags from.
+        roots = [args.branch]
+    if args.branch != active_branch_name:
+        active_branch_name = args.branch
+        checkout(active_branch_name, repo)
 
     if args.refresh:
-        refresh_branch(initial_active_branch, repo)
+        refresh_branch(active_branch_name, repo)
 
-
-    if args.branch:
-        roots = [args.branch]
-    elif args.cascade:
-        if initial_active_branch is not None:
-            roots = [branch_name(initial_active_branch)]
+    if args.cascade:
+        roots = [active_branch_name]
     print_dag(dag, roots, repo, args.cascade)
     # If performing a cascade, print out status again.
     if args.cascade:

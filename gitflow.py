@@ -11,6 +11,7 @@ import git
 import os
 import sys
 from collections import defaultdict
+from six import string_types
 from termcolor import colored
 
 
@@ -23,8 +24,16 @@ class CascadeException(Exception):
 
 
 def branch_name(branch):
-    if branch is None:
-        return None
+    """
+    Get the name of a branch object. Deals with a branch as a string.
+
+    :input branch: GitPython Branch object. Can also be a string.
+
+    :return: String name of the branch.
+    """
+    assert branch is not None, "Must have a valid branch to get the name!"
+    if isinstance(branch, string_types):
+        return branch
     name = branch.name.lstrip('./')
     return name
 

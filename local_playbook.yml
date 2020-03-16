@@ -1,0 +1,10 @@
+- hosts: localhost
+  become: true
+  tasks:
+  - name: Remove previous vim installation
+    apt:
+      name: vim
+      state: absent
+
+  - name: Install vim from source.
+    script: ./install_vim.sh

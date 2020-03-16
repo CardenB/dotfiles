@@ -18,3 +18,8 @@ This command will cause tmux to run as if local which allows iterm2 to interact
 with the tmux paste buffer! Also, the tmux command used will start a session
 with the given name or simply attach to that session if it already exists. This
 can also be found in the bashrc.
+
+## New Setup Process
+
+From now on, install ansible, then invoke the ansible installation path, via
+`./ansible_install.sh`.

@@ -8,3 +8,6 @@
 
   - name: Install vim from source.
     script: ./install_vim.sh
+
+  - name: Copy relevant dotfiles.
+    script: ./setup.sh

@@ -22,4 +22,4 @@ can also be found in the bashrc.
 ## New Setup Process
 
 From now on, install ansible, then invoke the ansible installation path, via
-`./ansible_install.sh`.
+`./ansible_setup.sh`.

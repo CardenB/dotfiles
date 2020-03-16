@@ -9,5 +9,10 @@
   - name: Install vim from source.
     script: ./install_vim.sh
 
+  - name: install tmux
+    apt:
+      name: tmux
+      state: latest
+
   - name: Copy relevant dotfiles.
     script: ./setup.sh

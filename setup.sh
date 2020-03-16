@@ -22,7 +22,13 @@ cp ./dot_ctags ~/.ctags
 cd $CWD
 
 # Install Vundle, a vim plugin manager.
-git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+VUNDLE_DIR=~/.vim/bundle/Vundle.vim
+if [ ! -d $VUNDLE_DIR ]
+then
+  git clone https://github.com/VundleVim/Vundle.vim.git $VUNDLE_DIR
+else
+  echo Skipping vundle clone, already exists at $VUNDLE_DIR
+fi
 
 # Clean unused plugins with vundle.
 # Append ! to PluginClean to auto-approve removal.
@@ -34,7 +40,14 @@ vim +PluginInstall +qall
 
 # Install TPM, a tmux plugin manager.
 # When you open tmux, use `prefix + I` to fetch the plugins and install.
-git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+TMUX_PLUGIN_DIR=~/.tmux/plugins/tpm
+if [ ! -d $TMUX_PLUGIN_DIR ]
+then
+  git clone https://github.com/tmux-plugins/tpm
+else
+  echo Tmux plugin clone, already exists at $TMUX_PLUGIN_DIR
+fi
+
 # Source config files for them to take effect.
 # Use `.` instead of `source` here because `source` is not found by bash.
 . ~/.bashrc

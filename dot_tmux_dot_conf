@@ -18,6 +18,11 @@ set -g @resurrect-save-shell-history 'on'
 # Plugin responsible for automatically saving sessions for resurrect.
 set -g @plugin 'tmux-plugins/tmux-continuum'
 
+# Other examples:
+# set -g @plugin 'github_username/plugin_name'
+# set -g @plugin 'git@github.com/user/plugin'
+# set -g @plugin 'git@bitbucket.com/user/plugin'
+
 # Option for continuum plugin that automatically uses resurrect to restore
 # when starting. Optimal for set-and-forget behavior.
 set -g @continuum-restore 'on'
@@ -26,19 +31,17 @@ set -g @continuum-restore 'on'
 set -g escape-time 10
 
 # Rate limits to prevent freezing on too much stdout
+# NOTE: As of tmux 2.1 and/or 2.2, this functionality is totally gone.
 setw -g c0-change-trigger 10
 setw -g c0-change-interval 250
-
-# Other examples:
-# set -g @plugin 'github_username/plugin_name'
-# set -g @plugin 'git@github.com/user/plugin'
-# set -g @plugin 'git@bitbucket.com/user/plugin'
 
 # Needed to enable mouse scrolling
 set -g mode-mouse on
 set -g mouse-resize-pane on
 set -g mouse-select-pane on
 set -g mouse-select-window on
+# For tmux 2.1+
+# set -g mouse on
 
 # Enable copy over ssh with iterm2
 setw -g mode-keys vi
@@ -46,7 +49,7 @@ bind P paste-buffer
 bind-key -t vi-copy 'v' begin-selection
 bind-key -t vi-copy 'y' copy-selection
 bind-key -t vi-copy 'V' rectangle-toggle
-# For tmux 2.4 or newer, replace the previous 3 lines with the following 3
+# For tmux 2.5 or newer, replace the previous 3 lines with the following 3
 # lines:
 # bind-key -T copy-mode-vi v send-keys -X begin-selection
 # bind-key -T copy-mode-vi y send-keys -X copy-selection

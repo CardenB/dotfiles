@@ -16,7 +16,7 @@
       executable: pip3
       name: GitPython
       state: latest
-    tags: python
+    tags: [python, gitflow]
 
   - name: Remove previous vim installation
     apt:

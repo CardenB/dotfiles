@@ -11,7 +11,5 @@ vim  +qall +PluginClean!
 # +qall keeps vim from opening a session to display status of plugin install.
 vim  +qall +PluginInstall
 
-# Source config files for them to take effect.
-# Use `.` instead of `source` here because `source` is not found by bash.
-. ~/.bashrc
-tmux source ~/.tmux.conf
+# Source relevant files.
+. source.sh

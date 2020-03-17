@@ -14,10 +14,7 @@ cd $DIR
 
 # Copy dotfiles in this directory to the proper location.
 # Do not symlink these files, as it doesn't work.
-cp ./dot_vimrc ~/.vimrc
-cp ./dot_bashrc ~/.bashrc
-cp ./dot_tmux_dot_conf ~/.tmux.conf
-cp ./dot_ctags ~/.ctags
+cp -r ./dotfiles/. ~/
 
 # Return to the original directory.
 cd $CWD

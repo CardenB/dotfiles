@@ -5,15 +5,24 @@
     apt:
       name: vim
       state: absent
+    tags: vim
 
   - name: Install vim from source
     script: install_vim.sh
+    tags: vim
 
   - name: install tmux
     apt:
       name: tmux
       state: latest
+    tags: tmux
 
   - name: Copy relevant dotfiles
+    copy:
+      src: ./dotfiles/.
+      dest: ~/
+    tags: dotfiles
+
+  - name: Set up Vundle and Tmux
     script: dotfile_setup.sh
     tags: dotfiles

@@ -124,3 +124,6 @@ alias tmux="TERM=screen-256color-bce tmux"
 if [ ! $TMUX ]; then
     tmux new-session -A -s carden
 fi
+
+# Enables vi mode for the terminal.
+set -o vi

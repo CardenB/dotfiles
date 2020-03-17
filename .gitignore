@@ -1,4 +1,7 @@
+# Vim swp files.
 *.swp
+*.swo
+*.swn
 
-# For ansible
+# For ansible.
 *.retry

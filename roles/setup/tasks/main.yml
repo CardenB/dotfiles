@@ -80,7 +80,6 @@
       - .tmux.conf
       - .vimrc
       - .vim
-      - touch.txt
     tags: dotfiles
 
   - name: Set up Vundle and Tmux

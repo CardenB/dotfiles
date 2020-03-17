@@ -1,0 +1,87 @@
+[user]
+  name = cardenb
+  email = cardenbag@gmail.com
+[core]
+  editor = vim
+  excludesfile = /home/carden/.gitignore
+[credential]
+  helper = cache --timeout=86400
+[push]
+  default = matching
+[diff]
+  tool = vimdiff
+[merge]
+  tool = vimdiff
+[hub]
+  protocol = https
+  host = git.zooxlabs.com
+[fetch]
+  prune = true
+[pull]
+  rebase = preserve
+[branch]
+  autoSetupMerge = always
+[alias]
+  flow = "!f() { \
+    gitflow $@; \
+  }; f"
+  pushf = push --force-with-lease
+  pushh = push origin HEAD
+  pushhf = push --force-with-lease origin HEAD
+  amend = commit --amend -C HEAD
+  oldest-ancestor = !bash -c 'diff --old-line-format= --new-line-format= <(git rev-list --first-parent \"${1:-master}\") <(git rev-list --first-parent \"${2:-HEAD}\") | head -1' -
+  pullr = pull --rebase=preserve
+  refresh = remote update -p
+  # Prints the name of the currently checked out branch.
+  curbranch = "!f() { \
+      git rev-parse --abbrev-ref HEAD | grep -v ^HEAD$ || git rev-parse HEAD; \
+    }; f"
+  # Prints the name of the upstream branch.
+  parent = "!f() { \
+    git name-rev --name-only $(git rev-parse `git curbranch`@{upstream}); \
+  }; f"
+  # Prints the name of the branch upstream to the specified branch.
+  parent-of = "!f() { \
+    git name-rev --name-only $(git rev-parse $1@{upstream}); \
+  }; f"
+  # Sets the upstream of the currently checked out branch to the specified
+  # branch.
+  sup = branch --set-upstream-to 
+  # Sets the upstream of the specified branch to the currently checked out
+  # branch. This is the inverse of `git sup`.
+  # NOTE: This fails if the branch matches the parent branch.
+  adopt = "!f() { \
+      CUR_BRANCH=`git curbranch`; \
+      SELECTED_BRANCH=$1; \
+      SELECTED_PARENT=`git parent-of $1`; \
+      git branch $1 --set-upstream-to $CUR_BRANCH; \
+      git rebase -i --onto $CUR_BRANCH $SELECTED_PARENT $SELECTED_BRANCH; \
+      git branch $SELECTED_BRANCH --set-upstream-to $CUR_BRANCH; \
+    }; f"
+  # Does an interactive rebase only for the commits between the parent branch
+  # and the currently checked out branch. Then sets the upstream of the
+  # currently checked out branch to the specified branch. After this, the
+  # currently checked out branch will the new parent's commits plus the commits
+  # unique to this branch. It will no longer have the old parent's commits
+  # (unless the old commits are also in the new parent's branch).
+  transfer-to = "!f() { \
+    CUR_BRANCH=`git curbranch`; \
+    ORIGINAL_PARENT=`git parent`; \
+    NEW_PARENT=$1; \
+    git rebase -i --onto $NEW_PARENT $ORIGINAL_PARENT $CUR_BRANCH; \
+    git branch $CUR_BRANCH --set-upstream-to $NEW_PARENT; \
+  }; f"
+  # Creates a parallel copy of the branch instead of one tracking the currently
+  # checked out branch.
+  copy = "!f() { \
+    NEW_BRANCH_NAME=$1; \
+    PARENT_OF_PARENT=$(git parent-of $(git parent)); \
+    git checkout -b $NEW_BRANCH_NAME; \
+    git sup $PARENT_OF_PARENT; \
+  }; f"
+
+  diff-parent = "!git diff `git parent`..HEAD $@"
+  difftool-parent = "!git difftool `git parent`..HEAD $@"
+  pullc = "!git pull --rebase origin `git curbranch`"
+  pr-parent = "!git pushh && hub pull-request -b `git parent` -h `git curbranch` -a $@"
+  refresh = "!git fetch origin $1:$1"

@@ -1,0 +1,93 @@
+- block:
+  - name: Install yum package manager
+    apt:
+      name: yum
+      state: latest
+    tags: [ripgrep, yum]
+
+  - name: Make yum repo dir.
+    file:
+      path: /etc/yum.repos.d
+      state: directory
+    tags: [ripgrep, yum]
+
+  - name: Add ripgrep repo
+    yum_repository:
+      # name: ripgrep
+      # description: Ripgrep yum repo
+      # baseurl: https://copr.fedorainfracloud.org/coprs/carlwgeorge/ripgrep/repo/epel-7/carlwgeorge-ripgrep-epel-7.repo
+      name: ripgrep
+      file: external_repos
+      description: ripgrep repo owned by carlwgeorge
+      baseurl: https://copr-be.cloud.fedoraproject.org/results/carlwgeorge/ripgrep/epel-7-$basearch/
+      gpgkey: https://copr-be.cloud.fedoraproject.org/results/carlwgeorge/ripgrep/pubkey.gpg
+      gpgcheck: yes
+      repo_gpgcheck: no
+      enabled: yes
+      skip_if_unavailable: true
+    tags: ripgrep
+
+  - name: Install ripgrep
+    yum:
+      name: ripgrep
+      enablerepo: ripgrep
+      state: present
+    tags: ripgrep
+
+  - name: Install python3.6
+    apt:
+      name: python3.6
+      state: latest
+    tags: python
+
+  - name: Install pip for python3
+    apt:
+      name: python3-pip
+      state: latest
+    tags: python
+
+  - name: Install python packages
+    pip:
+      executable: pip3
+      requirements: ./files/requirements36.txt
+    tags: python
+
+  - name: Remove previous vim installation
+    apt:
+      name: vim
+      state: absent
+    tags: vim
+
+  - name: Install vim from source
+    script: install_vim.sh
+    tags: vim
+
+  - name: install tmux
+    apt:
+      name: tmux
+      state: latest
+    tags: tmux
+
+  - name: Copy relevant dotfiles
+    copy:
+      src: "{{ item }}"
+      dest: "~/{{ item }}"
+      mode: 0664
+    loop:
+      - .bashrc
+      - .ctags
+      - .gitconfig
+      - .tmux.conf
+      - .vimrc
+      - touch.txt
+    tags: dotfiles
+
+  - name: Set up Vundle and Tmux
+    script: dotfile_setup.sh
+    tags: dotfiles
+
+  - name: Install gitflow
+    copy:
+      src: ./gitflow.py
+      dest: /bin/
+    tags: gitflow

@@ -6,13 +6,14 @@
       name: vim
       state: absent
 
-  - name: Install vim from source.
-    script: ./install_vim.sh
+  - name: Install vim from source
+    script: install_vim.sh
 
   - name: install tmux
     apt:
       name: tmux
       state: latest
 
-  - name: Copy relevant dotfiles.
-    script: ./setup.sh
+  - name: Copy relevant dotfiles
+    script: dotfile_setup.sh
+    tags: dotfiles

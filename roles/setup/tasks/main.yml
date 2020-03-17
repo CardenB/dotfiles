@@ -86,8 +86,14 @@
     script: dotfile_setup.sh
     tags: dotfiles
 
+  - name: Make local directory for commands.
+    file:
+      path: ~/.local/bin/
+      state: directory
+    tags: [gitflow]
+
   - name: Install gitflow
     copy:
-      src: ./gitflow.py
-      dest: /bin/
+      src: gitflow.py
+      dest: ~/.local/bin/gitflow
     tags: gitflow

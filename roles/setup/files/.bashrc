@@ -127,3 +127,5 @@ fi
 
 # Enables vi mode for the terminal.
 set -o vi
+
+alias gitflow="python3.6 ~/.local/bin/gitflow"

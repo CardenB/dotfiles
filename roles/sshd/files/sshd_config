@@ -52,6 +52,8 @@ AuthorizedKeysFile	.ssh/authorized_keys
 #IgnoreRhosts yes
 
 # To disable tunneled clear text passwords, change to no here!
+# NOTE: To copy keys over for a client, temporarily enable this, restart
+# sshd, copy keys, then disable.
 PasswordAuthentication no
 #PermitEmptyPasswords no
 

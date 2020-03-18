@@ -1,5 +1,5 @@
 #!/bin/sh
-ansible-playbook setup_playbook.yml --ask-sudo-pass
+ansible-playbook setup.yml --ask-sudo-pass
 
 # Do vim vundle setup here, because it can't be done in an ansible playbook.
 
@@ -12,4 +12,4 @@ vim  +qall +PluginClean!
 vim  +qall +PluginInstall
 
 # Source relevant files.
-. source.sh
+. ./source.sh

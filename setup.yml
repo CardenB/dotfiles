@@ -2,3 +2,4 @@
   roles:
     - {role: setup, tags: [setup]}
     - {role: ansible-role-ripgrep, tags: [setup]}
+    - {role: sshd, tags: [server]}

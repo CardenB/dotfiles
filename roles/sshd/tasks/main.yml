@@ -1,0 +1,23 @@
+  - name: apt install ssh packages
+    become: yes
+    apt:
+      name: openssh-server
+      state: latest
+
+  - name: systemd enable ssh servers
+    become: yes
+    systemd:
+      name: sshd
+      enabled: yes
+      state: restarted
+
+  - name: Copy sshd_config
+    become: yes
+    copy:
+      src: sshd_config
+      dest: /etc/ssh/sshd_config
+      owner: root
+      group: root
+      mode: 0600
+    notify: restart_sshd
+    tags: [sshd_config]

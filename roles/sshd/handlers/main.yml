@@ -1,0 +1,7 @@
+# Restarting sshd is important to do after setup.
+- name: systemctl restart sshd
+  become: yes
+  listen: restart_sshd
+  systemd:
+    name: sshd
+    state: restarted

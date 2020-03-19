@@ -23,12 +23,6 @@
       name: vim
       state: absent
 
-  - name: Clone vim repo.
-    become: no
-    git:
-      repo: https://github.com/vim/vim.git
-      dest: "{{ vim_dir }}"
-
   - name: Install python3 config to retrieve parameters for vim.
     become: yes
     apt:
@@ -43,14 +37,32 @@
       name: checkinstall
       state: latest
 
-  - name: Configure vim install
+  - name: Clone vim repo.
+    become: no
+    git:
+      repo: https://github.com/vim/vim.git
+      dest: "{{ vim_dir }}"
+
+  - name: Store python3.6 config for use in vim config.
+    become: no
+    command:
+      cmd: python3.6-config --configdir
+    register: python_config
+
+  - name: Configure vim install pt 1
+    become: no
+    command:
+      cmd: make clean distclean
+      chdir: "{{ vim_dir }}"
+
+  - name: Configure vim install 2
     become: no
     command:
       cmd: >
-        ./configure --with-features=huge --enable-multibyte --enable-rubyinterp=yes --enable-python3interp=yes --with-python3-config-dir="$(python3.6-config --configdir)" --enable-cscope
+        ./configure --with-features=huge --with-python3-command=python3.6 --with-python3 --enable-python3interp=yes --with-python3-config-dir="{{ python_config.stdout }}" --enable-multibyte --enable-rubyinterp=yes --enable-cscope
       chdir: "{{ vim_dir }}"
 
-  - name: Configure vim install pt 2
+  - name: Configure vim install pt 3
     become: no
     environment:
       VIMRUNTIMEDIR: /usr/local/share/vim/vim82

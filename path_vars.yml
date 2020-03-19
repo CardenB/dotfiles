@@ -1,0 +1,7 @@
+# Can't use become: yes before importing this file, otherwise the
+# home environment variable will be changed to /root/.
+home_dir: "{{ ansible_env.HOME }}"
+local_dir: "{{ home_dir }}/.local"
+local_bin: "{{ local_dir }}/bin"
+vim_dir: "{{ local_dir }}/src/vim"
+ycm_dir: "{{ home_dir }}/.vim/bundle/YouCompleteMe"

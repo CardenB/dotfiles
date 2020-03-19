@@ -1,0 +1,38 @@
+- block:
+  - name: Copy relevant dotfiles
+    become: no
+    copy:
+      src: "{{ item }}"
+      dest: "~/{{ item }}"
+      mode: 0664
+    loop:
+      - .bashrc
+      - .ctags
+      - .vimrc
+      - .tmux.conf
+      - .gitconfig
+    tags: dotfiles
+
+  - name: Source bashrc
+    become: no
+    shell: ". {{ home_dir }}/.bashrc"
+
+  - name: Source tmux conf
+    become: no
+    command: "tmux source {{ home_dir }}/.tmux.conf"
+
+  - name: Vim plugin clean
+    become: no
+    # Need to ignore errors since vim gives return code 1 here for some reason.
+    # See: https://stackoverflow.com/questions/33672491/how-to-use-ansible-to-provision-vim-vundle-plugin
+    ignore_errors: yes
+    command:
+      cmd: vim -E -s -c "source {{ home_dir }}/.vimrc" -c PluginClean! -c qall
+
+  - name: Vim plugin install
+    become: no
+    ignore_errors: yes
+    # Need to ignore errors since vim gives return code 1 here for some reason.
+    # See: https://stackoverflow.com/questions/33672491/how-to-use-ansible-to-provision-vim-vundle-plugin
+    command:
+      cmd: vim -E -s -c "source {{ home_dir }}/.vimrc" -c PluginInstall! -c qall

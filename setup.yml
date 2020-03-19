@@ -1,5 +1,12 @@
 - hosts: localhost
+  vars_files:
+    - path_vars.yml
   roles:
-    - {role: setup, tags: [setup]}
-    - {role: ansible-role-ripgrep, tags: [setup]}
+    - {role: python, tags: [python]}
+    - {role: ansible-role-ripgrep, tags: [ripgrep]}
+    - {role: git, tags: [git]}
+    - {role: gitflow, tags: [gitflow]}
     - {role: sshd, tags: [server]}
+    - {role: vim, tags: [vim]}
+    - {role: youcompleteme, tags: [vim, ycm]}
+    - {role: dotfiles, tags: [dotfiles]}

@@ -1,0 +1,32 @@
+- block:
+  - name: Check if YouCompleteMe directory exists
+    become: no
+    stat:
+      path: "{{ ycm_dir }}"
+    register: ycm_dir_state
+
+  - name: Abort if ycm_dir does not exist.
+    become: no
+    fail:
+      msg: >-
+        YouCompleteMe not installed with vundle. Please install vim with the vim
+        playbook.
+    when: not (ycm_dir_state.stat.exists or ycm_dir_state.stat.isdir)
+
+  - name: Install YouCompleteMe dependencies
+    become: yes
+    apt:
+      pkg:
+        - build-essential
+        - cmake
+        - python3-dev
+      state: latest
+
+  - name: Install YouCompleteMe
+    become: no
+    command:
+      chdir: "{{ ycm_dir }}"
+      cmd: >-
+        python3 install.py --clangd-completer
+      # cd ~/.vim/bundle/YouCompleteMe
+      # python3 install.py --clangd-completer

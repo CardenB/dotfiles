@@ -253,15 +253,6 @@ nnoremap ,, :call SourceVimrc()<cr>
 
 " Map ctrl-I to clang formatting
 "
-:function! GenerateCompileCommands()
-:  let l:fname=expand('%:p')
-:  py3f ~/.vim/generate_compile_commands_from_filename.py
-:  call input('Press any key to continue')
-:  YcmRestartServer
-:  redraw!
-:endfunction
-map <C-y> :call GenerateCompileCommands()<cr>
-
 :function! FormatEntirePythonFile()
 :  let l:lines="all"
 :  py3f ~/.vim/autoformat_python.py

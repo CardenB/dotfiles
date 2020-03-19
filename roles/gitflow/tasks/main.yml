@@ -1,0 +1,19 @@
+- block:
+  - name: Make local directory for commands.
+    file:
+      path: "{{ local_bin }}"
+      state: directory
+    tags: [gitflow]
+
+  - name: Install python packages for gitflow
+    pip:
+      executable: pip3
+      name: GitPython
+      state: latest
+    tags: [python, gitflow]
+
+  - name: Install gitflow
+    copy:
+      src: gitflow.py
+      dest: "{{ local_bin }}/gitflow"
+    tags: gitflow

@@ -1,0 +1,17 @@
+- block:
+  - name: Install python packages.
+    apt:
+      pkg:
+        - python3.6
+        - python3.6-dev
+        - python3-pip
+      name: python3.6
+      state: latest
+    tags: python
+
+  - name: Install python packages
+    pip:
+      executable: pip3
+      name: termcolor
+      state: latest
+    tags: [python, gitflow]

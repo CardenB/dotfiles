@@ -1,0 +1,13 @@
+- block:
+  - name: Install git.
+    become: yes
+    apt:
+      name: vim
+      state: latest
+
+  - name: Copy relevant dotfiles
+    become: no
+    copy:
+      src: ".gitconfig"
+      dest: "{{ ansible_env.HOME }}/.gitconfig"
+      mode: 0664

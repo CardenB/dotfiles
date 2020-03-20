@@ -13,6 +13,9 @@
 " have made, as well as sanely reset options when re-sourcing .vimrc
 set nocompatible
 
+" Set utf-8 encoding for YCM.
+set encoding=utf-8
+
 " set for vundle
 filetype off                        " required
 

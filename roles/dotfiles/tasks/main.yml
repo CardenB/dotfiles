@@ -1,6 +1,7 @@
 - block:
   - name: Copy relevant dotfiles
     become: no
+    local_follow: False
     copy:
       src: "{{ item }}"
       dest: "~/{{ item }}"

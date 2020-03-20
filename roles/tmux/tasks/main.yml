@@ -19,6 +19,8 @@
   - name: Source tmux config
     command:
       cmd: tmux source ~/.tmux.conf
+    # This will have nonzero return code if tmux isn't currently running.
+    ignore_errors: True
 
   - name: Install tmux plugins
     command:

@@ -129,3 +129,6 @@ fi
 set -o vi
 
 alias gitflow="python3.6 ~/.local/bin/gitflow"
+
+# Add /usr/local/bin to path to find vim install.
+export PATH=$PATH:/usr/local/bin

@@ -1,0 +1,5 @@
+- hosts: localhost
+  vars_files:
+    - path_vars.yml
+  roles:
+    - {role: sshd, tags: [server]}

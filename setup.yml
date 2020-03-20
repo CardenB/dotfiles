@@ -6,7 +6,6 @@
     - {role: ansible-role-ripgrep, tags: [ripgrep]}
     - {role: git, tags: [git]}
     - {role: gitflow, tags: [gitflow]}
-    - {role: sshd, tags: [server]}
     - {role: vim, tags: [vim]}
     - {role: youcompleteme, tags: [vim, ycm]}
     - {role: dotfiles, tags: [dotfiles]}

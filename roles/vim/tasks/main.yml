@@ -55,7 +55,7 @@
       cmd: make clean distclean
       chdir: "{{ vim_dir }}"
 
-  - name: Configure vim install 2
+  - name: Configure vim install pt 2
     become: no
     command:
       cmd: >

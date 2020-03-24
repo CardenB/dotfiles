@@ -27,7 +27,8 @@ def main():
             'unformatted_source': text,
             'style_config': {
                 'based_on_style': 'pep8',
-                'dedent_closing_brackets': 'true',
+                'dedent_closing_brackets': 'false',
+                'split_all_top_level_commas_separated_values': 'true',
             }
     }
 

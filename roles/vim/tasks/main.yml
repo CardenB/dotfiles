@@ -86,7 +86,7 @@
     become: no
     copy:
       src: "{{ item }}"
-      dest: "{{ home_dir }}/{{ item }}"
+      dest: "{{ home_dir }}/"
       mode: 0664
     loop:
       - .vimrc

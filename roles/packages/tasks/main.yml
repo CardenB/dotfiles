@@ -3,5 +3,4 @@
     apt:
       pkg:
         - mosh
-      name: Packages
       state: latest

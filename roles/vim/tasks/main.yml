@@ -37,6 +37,12 @@
       name: checkinstall
       state: latest
 
+  - name: Install terminal library required for configuring vim install
+    become: yes
+    apt:
+      name: ncurses-dev
+      state: latest
+
   - name: Clone vim repo.
     become: no
     git:

@@ -10,7 +10,8 @@
       executable: pip3
       name: GitPython
       state: latest
-    tags: [python, gitflow]
+      extra_args: --user
+    tags: [gitflow]
 
   - name: Install gitflow
     copy:

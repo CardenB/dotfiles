@@ -1,9 +1,6 @@
 - block:
-  - name: install tmux
-    apt:
-      name: tmux
-      state: latest
-    tags: tmux
+  # Install tmux according to platform.
+  - include: "{{ ansible_distribution }}.yml"
 
   - name: Copy relevant dotfiles
     copy:

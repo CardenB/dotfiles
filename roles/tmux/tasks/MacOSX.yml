@@ -1,0 +1,5 @@
+- name: Install tmux for MacOS
+  become: no
+  homebrew:
+      name: tmux
+      state: latest

@@ -1,17 +1,10 @@
 - block:
-  - name: Install python3.6 packages
-    become: yes
-    apt:
-      pkg:
-        - python3.6
-        - python3.6-dev
-        - python3-pip
-      state: latest
-    tags: python
+  - include: "{{ ansible_distribution }}.yml"
 
   - name: Install python packages
     pip:
       executable: pip3
       name: termcolor
       state: latest
+      extra_args: --user
     tags: [python, gitflow]

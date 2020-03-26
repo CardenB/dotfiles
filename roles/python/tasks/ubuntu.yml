@@ -1,0 +1,11 @@
+- block:
+  - name: Install python3.6 packages
+    become: yes
+    apt:
+      pkg:
+        - python3.6
+        - python3.6-dev
+        - python3-pip
+      state: latest
+    tags: python
+

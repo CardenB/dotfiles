@@ -1,0 +1,16 @@
+- block:
+  - name: Install pyenv to manage python versions
+    become: no
+    homebrew:
+        name: pyenv
+        state: latest
+
+  - name: Check if python 3.6.9 is already installed
+    become: no
+    stat:
+      path: "~/.pyenv/versions/3.6.9"
+    register: pyenv369_state
+
+  - name: Install python 3.6.9
+    command: pyenv install 3.6.9
+    when: not (pyenv369_state.stat.exists)

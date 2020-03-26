@@ -3,7 +3,7 @@
     become: no
     copy:
       src: "{{ item }}"
-      dest: "~/{{ item }}"
+      dest: "~/"
       mode: 0664
     loop:
       - .carden_bashrc

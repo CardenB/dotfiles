@@ -1,7 +1,7 @@
 - block:
   - name: Install python3.6 packages
+    become: yes
     apt:
-      become: yes
       pkg:
         - python3.6
         - python3.6-dev

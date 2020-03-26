@@ -1,9 +1,6 @@
 - block:
-  - name: Install git.
-    become: yes
-    apt:
-      name: vim
-      state: latest
+  # Install git in a platform independent way.
+  - include: "{{ ansible_distribution }}.yml"
 
   - name: Copy relevant dotfiles
     become: no

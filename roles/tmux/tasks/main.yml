@@ -14,7 +14,7 @@
   - name: Set up tmux plugin manager
     git:
       repo: https://github.com/tmux-plugins/tpm
-      dest: "{{ home_dir }}/.tmux/plugins/"
+      dest: "{{ home_dir }}/.tmux/plugins/tpm"
 
   - name: Source tmux config
     command:
@@ -24,4 +24,4 @@
 
   - name: Install tmux plugins
     command:
-      cmd: "{{ home_dir }}/.tmux/plugins/tpm/bin/install_plugins
+      cmd: "{{ home_dir }}/.tmux/plugins/tpm/bin/install_plugins"

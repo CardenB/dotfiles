@@ -65,7 +65,7 @@
     become: no
     command:
       cmd: >
-        ./configure --with-features=huge --with-python3-command=python3.6 --with-python3 --enable-python3interp=yes --with-python3-config-dir="{{ python_config.stdout }}" --enable-multibyte --enable-rubyinterp=yes --enable-cscope
+        ./configure --with-features=huge --with-python3-command=python3.6 --enable-python3interp=yes --with-python3-config-dir="{{ python_config.stdout }}" --enable-multibyte --enable-rubyinterp=yes --enable-cscope --enable-perlinterp --enable-luainterp --enable-gui=gtk2 --prefix=/usr/local/
       chdir: "{{ vim_dir }}"
 
   - name: Configure vim install pt 3

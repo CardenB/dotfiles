@@ -6,12 +6,24 @@
       dest: "~/{{ item }}"
       mode: 0664
     loop:
-      - .bashrc
+      - .carden_bashrc
       - .ctags
       - .vimrc
       - .tmux.conf
       - .gitconfig
     tags: dotfiles
+
+  - name: Create .bashrc if it doesn't exist
+    file:
+      path: ~/.bashrc
+      state: touch
+      mode: '0666'
+
+  - name: Insert/Update .bashrc to also source the .carden_bashrc
+    blockinfile:
+      path: ~/.bashrc
+      block: |
+        if [ -f ~/.carden_bashrc ]; then . ~/.carden_bashrc; fi
 
   - name: Source bashrc
     become: no

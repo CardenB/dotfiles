@@ -3,6 +3,7 @@
     - path_vars.yml
   roles:
     - {role: ansible-role-ripgrep, tags: [ripgrep]}
+    - {role: packages, tags: [packages]}
     - {role: gitflow, tags: [gitflow]}
     - {role: vim, tags: [vim]}
     - {role: youcompleteme, tags: [vim, ycm]}

@@ -2,8 +2,10 @@
   vars_files:
     - path_vars.yml
   roles:
+    - {role: python, tags: [python]}
     - {role: ansible-role-ripgrep, tags: [ripgrep]}
     - {role: packages, tags: [packages]}
+    - {role: tmux, tags: [tmux]}
     - {role: gitflow, tags: [gitflow]}
     - {role: vim, tags: [vim]}
     - {role: youcompleteme, tags: [vim, ycm]}

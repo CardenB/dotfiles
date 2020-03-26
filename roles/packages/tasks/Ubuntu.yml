@@ -1,0 +1,6 @@
+- block:
+  - name: Install most general system packages.
+    apt:
+      pkg:
+        - mosh
+      state: latest

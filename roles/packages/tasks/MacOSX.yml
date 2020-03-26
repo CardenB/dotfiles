@@ -1,0 +1,5 @@
+- name: Install Mosh for MacOS
+  become: no
+  homebrew:
+      name: mosh
+      state: latest

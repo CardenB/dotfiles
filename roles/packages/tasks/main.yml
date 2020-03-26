@@ -1,6 +1,2 @@
 - block:
-  - name: Install most general system packages.
-    apt:
-      pkg:
-        - mosh
-      state: latest
+  - include: "{{ ansible_distribution }}.yml"

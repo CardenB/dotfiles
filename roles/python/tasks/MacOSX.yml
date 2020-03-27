@@ -6,6 +6,7 @@
         state: latest
 
   - name: Insert/Update .bashrc to put pyenv on path so versions can be managed
+    become: no
     blockinfile:
       path: ~/.bashrc
       create: yes

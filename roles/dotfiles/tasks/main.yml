@@ -8,12 +8,10 @@
     loop:
       - .carden_bashrc
       - .ctags
-      - .carden_vimrc
-      - .tmux.conf
-      - .gitconfig
     tags: dotfiles
 
   - name: Insert/Update .bashrc to also source the .carden_bashrc
+    become: no
     blockinfile:
       path: ~/.bashrc
       create: yes

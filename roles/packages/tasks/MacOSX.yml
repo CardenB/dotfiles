@@ -6,6 +6,7 @@
         state: latest
 
   - name: Insert/Update .bashrc to prepand /usr/local/bin to system path and prefer homebrew installs
+    become: no
     blockinfile:
       path: ~/.bashrc
       create: yes

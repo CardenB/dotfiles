@@ -80,5 +80,5 @@
   diff-parent = "!git diff `git parent`..HEAD $@"
   difftool-parent = "!git difftool `git parent`..HEAD $@"
   pullc = "!git pull --rebase origin `git curbranch`"
-  pr-parent = "!git pushh && hub pull-request -b `git parent` -h `git curbranch` -a $@"
+  pr-parent = "!git pushh && hub pull-request -b `git parent` -h `git curbranch`"
   refresh = "!git fetch origin $1:$1"

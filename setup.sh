@@ -7,5 +7,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 
   # Use homebrew to install ansible
   brew install ansible
+elif [[ "$OSTYPE" == "linux-gnu" ]]; then
+  sudo apt-get install ansible
 fi
 ansible-playbook setup.yml

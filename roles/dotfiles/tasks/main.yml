@@ -24,26 +24,19 @@
 
   - name: Source bashrc
     become: no
-    shell: ". {{ home_dir }}/.bashrc"
+    shell: ". ~/.bashrc"
 
-  - name: Source tmux conf
-    become: no
-    command: "tmux source {{ home_dir }}/.tmux.conf"
-    # This will have nonzero return code if tmux isn't currently running.
-    ignore_errors: True
+  - name: Refresh tmux conf
+    include_role:
+      name: tmux
+      tasks_from: tmux_conf
 
-  - name: Vim plugin clean
-    become: no
-    # Need to ignore errors since vim gives return code 1 here for some reason.
-    # See: https://stackoverflow.com/questions/33672491/how-to-use-ansible-to-provision-vim-vundle-plugin
-    ignore_errors: yes
-    command:
-      cmd: vim -E -s -c "source {{ home_dir }}/.vimrc" -c PluginClean! -c qall
+  - name: Refresh vimrc
+    include_role:
+      name: vim
+      tasks_from: vimrc
 
-  - name: Vim plugin install
-    become: no
-    ignore_errors: yes
-    # Need to ignore errors since vim gives return code 1 here for some reason.
-    # See: https://stackoverflow.com/questions/33672491/how-to-use-ansible-to-provision-vim-vundle-plugin
-    command:
-      cmd: vim -E -s -c "source {{ home_dir }}/.vimrc" -c PluginInstall! -c qall
+  - name: Set gitconfig
+    include_role:
+      name: git
+      tasks_from: dotfiles

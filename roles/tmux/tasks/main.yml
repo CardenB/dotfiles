@@ -2,22 +2,13 @@
   # Install tmux according to platform.
   - include: "{{ ansible_distribution }}.yml"
 
-  - name: Copy relevant dotfiles
-    copy:
-      src: ".tmux.conf"
-      dest: "{{ home_dir }}/.tmux.conf"
-      mode: 0664
-
   - name: Set up tmux plugin manager
     git:
       repo: https://github.com/tmux-plugins/tpm
       dest: "{{ home_dir }}/.tmux/plugins/tpm"
 
-  - name: Source tmux config
-    command:
-      cmd: tmux source ~/.tmux.conf
-    # This will have nonzero return code if tmux isn't currently running.
-    ignore_errors: True
+  # Setup .tmux.conf
+  - include: "tmux_conf.yml"
 
   - name: Install tmux plugins
     command:

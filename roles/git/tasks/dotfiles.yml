@@ -1,0 +1,8 @@
+- block:
+  - name: Copy relevant dotfiles
+    become: no
+    copy:
+      src: ".gitconfig"
+      dest: "~/.gitconfig"
+      mode: 0664
+

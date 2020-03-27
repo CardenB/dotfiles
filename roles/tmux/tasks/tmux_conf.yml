@@ -1,0 +1,12 @@
+- block:
+  - name: Copy relevant dotfiles
+    copy:
+      src: ".tmux.conf"
+      dest: "{{ home_dir }}/.tmux.conf"
+      mode: 0664
+
+  - name: Source tmux conf
+    become: no
+    command: "tmux source {{ home_dir }}/.tmux.conf"
+    # This will have nonzero return code if tmux isn't currently running.
+    ignore_errors: True

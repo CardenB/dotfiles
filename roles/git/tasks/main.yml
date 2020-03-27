@@ -2,9 +2,5 @@
   # Install git in a platform independent way.
   - include: "{{ ansible_distribution }}.yml"
 
-  - name: Copy relevant dotfiles
-    become: no
-    copy:
-      src: ".gitconfig"
-      dest: "{{ ansible_env.HOME }}/.gitconfig"
-      mode: 0664
+  # Copy dotfiles
+  - include: "dotfiles.yml"

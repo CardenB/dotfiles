@@ -2,44 +2,11 @@
   # Install vim in a platform independent way.
   - include: "{{ ansible_distribution }}.yml"
 
-  - name: Copy relevant vim dotfiles
-    become: no
-    copy:
-      src: "{{ item }}"
-      dest: "{{ home_dir }}/"
-      mode: 0664
-    loop:
-      - .carden_vimrc
-      - .vim
-
-  - name: Insert/Update .vimrc to source my personal vimrc and not collide with existing
-    blockinfile:
-      create: yes
-      insertbefore: BOF
-      marker: '" ANSIBLE MANAGED BLOCK'
-      mode: 0664
-      path: ~/.vimrc
-      block: |
-        so ~/.carden_vimrc
-
   - name: Set up vundle plugin manager
     become: no
     git:
       repo: https://github.com/VundleVim/Vundle.vim.git
       dest: "{{ home_dir }}/.vim/bundle/Vundle.vim"
 
-  - name: Vim plugin clean
-    become: no
-    # Need to ignore errors since vim gives return code 1 here for some reason.
-    # See: https://stackoverflow.com/questions/33672491/how-to-use-ansible-to-provision-vim-vundle-plugin
-    ignore_errors: yes
-    command:
-      cmd: vim -E -s -c "source {{ home_dir }}/.vimrc" -c PluginClean! -c qall
-
-  - name: Vim plugin install
-    become: no
-    ignore_errors: yes
-    # Need to ignore errors since vim gives return code 1 here for some reason.
-    # See: https://stackoverflow.com/questions/33672491/how-to-use-ansible-to-provision-vim-vundle-plugin
-    command:
-      cmd: vim -E -s -c "source {{ home_dir }}/.vimrc" -c PluginInstall! -c qall
+  # Configure vimrc
+  - include: "vimrc.yml"

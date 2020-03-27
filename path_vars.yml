@@ -1,4 +1,3 @@
-cruise: no
 # Can't use become: yes before importing this file, otherwise the
 # home environment variable will be changed to /root/.
 home_dir: "{{ ansible_env.HOME }}"

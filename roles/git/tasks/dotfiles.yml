@@ -19,9 +19,16 @@
         [hub]
           host = github.robot.car
 
+  - name: Check if github token file already exists.
+    become: no
+    stat:
+      path: "~/.github_token"
+    register: github_token_state
+    when: cruise
+
   - name: Create place to store github token for hub cli
     become: no
-    when: cruise
+    when: cruise and not github_token_state.stat.exists
     blockinfile:
       path: ~/.github_token
       create: yes
@@ -39,7 +46,7 @@
       create: yes
       insertafter: EOF
       mode: 0664
-      marker: "# Used to manage hubcli personal access token"
+      marker_begin: "Source hubcli token"
       block: |
         . ~/.github_token
 

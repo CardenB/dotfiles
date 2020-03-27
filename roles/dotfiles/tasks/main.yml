@@ -8,20 +8,17 @@
     loop:
       - .carden_bashrc
       - .ctags
-      - .vimrc
+      - .carden_vimrc
       - .tmux.conf
       - .gitconfig
     tags: dotfiles
 
-  - name: Create .bashrc if it doesn't exist
-    file:
-      path: ~/.bashrc
-      state: touch
-      mode: '0666'
-
   - name: Insert/Update .bashrc to also source the .carden_bashrc
     blockinfile:
       path: ~/.bashrc
+      create: yes
+      insertafter: EOF
+      mode: 0664
       block: |
         if [ -f ~/.carden_bashrc ]; then . ~/.carden_bashrc; fi
 

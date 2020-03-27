@@ -5,6 +5,20 @@
         name: pyenv
         state: latest
 
+  - name: Insert/Update .bashrc to put pyenv on path so versions can be managed
+    blockinfile:
+      path: ~/.bashrc
+      create: yes
+      insertafter: EOF
+      mode: 0664
+      block: |
+        # This needs to be executed by shell to allow pyenv to manage system versions.
+        eval "$(pyenv init -)"
+
+  - name: Source bashrc
+    become: no
+    shell: ". {{ home_dir }}/.bashrc"
+
   - name: Check if python 3.6.9 is already installed
     become: no
     stat:

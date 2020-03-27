@@ -19,6 +19,30 @@
         [hub]
           host = github.robot.car
 
+  - name: Create place to store github token for hub cli
+    become: no
+    when: cruise
+    blockinfile:
+      path: ~/.github_token
+      create: yes
+      insertafter: EOF
+      mode: 0664
+      marker_begin: "Generate personal access token on github and insert below:"
+      block: |
+        export GITHUB_TOKEN=
+
+  - name: Source github token file in bashrc
+    become: no
+    when: cruise
+    blockinfile:
+      path: ~/.bashrc
+      create: yes
+      insertafter: EOF
+      mode: 0664
+      marker: "# Used to manage hubcli personal access token"
+      block: |
+        . ~/.github_token
+
   - name: Insert github enterprise host to git config for hubcli.
     become: no
     when: zoox
@@ -30,4 +54,5 @@
       marker: "# Configures hubcli for zoox enterprise"
       block: |
         [hub]
+          protocol = https
           host = git.zooxlabs.com

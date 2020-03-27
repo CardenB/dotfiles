@@ -17,8 +17,9 @@
         eval "$(pyenv init -)"
 
   - name: Source bashrc
-    become: no
-    shell: ". {{ home_dir }}/.bashrc"
+    include_role:
+      name: dotfiles
+      tasks_from: source_bashrc
 
   - name: Check if python 3.6.9 is already installed
     become: no

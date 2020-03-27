@@ -16,5 +16,6 @@
         export PATH=/usr/local/bin:$PATH
 
   - name: Source bashrc
-    become: no
-    shell: ". {{ home_dir }}/.bashrc"
+    include_role:
+      name: dotfiles
+      tasks_from: source_bashrc

@@ -1,6 +1,8 @@
 - hosts: localhost
   vars_files:
     - path_vars.yml
+  vars:
+    cruise: yes
   roles:
     - {role: python, tags: [python]}
     - {role: ansible-role-ripgrep, tags: [ripgrep]}

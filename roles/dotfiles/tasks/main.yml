@@ -21,8 +21,9 @@
         if [ -f ~/.carden_bashrc ]; then . ~/.carden_bashrc; fi
 
   - name: Source bashrc
-    become: no
-    shell: ". ~/.bashrc"
+    include_role:
+      name: dotfiles
+      tasks_from: source_bashrc
 
   - name: Refresh tmux conf
     include_role:

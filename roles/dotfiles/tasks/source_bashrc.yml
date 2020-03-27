@@ -1,0 +1,13 @@
+- block:
+  - name: Source bashrc
+    become: no
+    shell: ". ~/.bashrc"
+    ignore_errors: True
+    register: src_result
+
+  - name: Abort if failure occured when not cuise
+    become: no
+    fail:
+      msg: >-
+        Failure occured that is not acceptable.
+    when: not "{{ cruise }}"

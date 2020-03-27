@@ -4,3 +4,16 @@
     apt:
       name: vim
       state: latest
+
+  - apt_repository:
+      repo: ppa:cpick/hub
+      state: present
+    become: yes
+    name: Add repository for hubcli
+
+  - name: Install hubcli for github
+    become: yes
+    apt:
+      update_cache: yes
+      name: hub
+      state: latest

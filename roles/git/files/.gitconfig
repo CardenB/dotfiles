@@ -12,9 +12,6 @@
   tool = vimdiff
 [merge]
   tool = vimdiff
-[hub]
-  protocol = https
-  host = git.zooxlabs.com
 [fetch]
   prune = true
 [pull]

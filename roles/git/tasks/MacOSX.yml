@@ -3,3 +3,9 @@
   homebrew:
       name: git
       state: latest
+
+- name: Install hubcli for MacOS
+  become: no
+  homebrew:
+      name: hub
+      state: latest

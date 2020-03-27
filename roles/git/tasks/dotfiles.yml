@@ -6,3 +6,28 @@
       dest: "~/.gitconfig"
       mode: 0664
 
+  - name: Insert github enterprise host to git config for hubcli.
+    become: no
+    when: cruise
+    blockinfile:
+      path: ~/.gitconfig
+      create: yes
+      insertafter: EOF
+      mode: 0664
+      marker: "# Configures hubcli for cruise enterprise"
+      block: |
+        [hub]
+          host = github.robot.car
+
+  - name: Insert github enterprise host to git config for hubcli.
+    become: no
+    when: zoox
+    blockinfile:
+      path: ~/.gitconfig
+      create: yes
+      insertafter: EOF
+      mode: 0664
+      marker: "# Configures hubcli for zoox enterprise"
+      block: |
+        [hub]
+          host = git.zooxlabs.com

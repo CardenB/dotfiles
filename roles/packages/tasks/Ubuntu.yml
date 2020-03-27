@@ -1,5 +1,6 @@
 - block:
   - name: Install most general system packages.
+    become: yes
     apt:
       pkg:
         - mosh

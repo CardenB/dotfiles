@@ -1,92 +1,6 @@
 - block:
-  - name: Check if vim_dir already exists.
-    become: no
-    stat:
-      path: "{{ vim_dir }}"
-    register: vim_dir_state
-
-  - name: Abort if vim_dir already exists.
-    become: no
-    fail:
-      msg: >-
-        Vim repo path collision at {{ vim_dir }}.
-        Please clear this path to continue.
-        Run:
-        sudo rm -rf {{ vim_dir }}
-    # Can only check isdir attribute if it actually exists, so we repeat the
-    # existence check.
-    when: vim_dir_state.stat.exists or (vim_dir_state.stat.exists and vim_dir_state.stat.isdir)
-
-  - name: Remove previous vim installation
-    become: yes
-    apt:
-      name: vim
-      state: absent
-
-  - name: Install python3 config to retrieve parameters for vim.
-    become: yes
-    apt:
-      pkg:
-        - python3.6
-        - python3.6-dev
-      state: latest
-
-  - name: Install checkinstall to track the package install
-    become: yes
-    apt:
-      name: checkinstall
-      state: latest
-
-  - name: Install terminal library required for configuring vim install
-    become: yes
-    apt:
-      name: ncurses-dev
-      state: latest
-
-  - name: Clone vim repo.
-    become: no
-    git:
-      repo: https://github.com/vim/vim.git
-      dest: "{{ vim_dir }}"
-
-  - name: Store python3.6 config for use in vim config.
-    become: no
-    command:
-      cmd: python3.6-config --configdir
-    register: python_config
-
-  - name: Configure vim install pt 1
-    become: no
-    command:
-      cmd: make clean distclean
-      chdir: "{{ vim_dir }}"
-
-  - name: Configure vim install pt 2
-    become: no
-    command:
-      cmd: >
-        ./configure --with-features=huge --with-python3-command=python3.6 --enable-python3interp=yes --with-python3-config-dir="{{ python_config.stdout }}" --enable-multibyte --enable-rubyinterp=yes --enable-cscope --enable-perlinterp --enable-luainterp --enable-gui=gtk2 --prefix=/usr/local/
-      chdir: "{{ vim_dir }}"
-
-  - name: Configure vim install pt 3
-    become: no
-    environment:
-      VIMRUNTIMEDIR: /usr/local/share/vim/vim82
-    command:
-      cmd: make
-      chdir: "{{ vim_dir }}"
-
-  - name: Install vim
-    become: yes
-    command:
-      cmd: checkinstall -y
-      chdir: "{{ vim_dir }}"
-
-  - name: Remove vim source
-    become: yes
-    file:
-      path: "{{ vim_dir }}"
-      state: absent
+  # Install vim in a platform independent way.
+  - include: "{{ ansible_distribution }}.yml"
 
   - name: Copy relevant vim dotfiles
     become: no
@@ -95,8 +9,18 @@
       dest: "{{ home_dir }}/"
       mode: 0664
     loop:
-      - .vimrc
+      - .carden_vimrc
       - .vim
+
+  - name: Insert/Update .vimrc to source my personal vimrc and not collide with existing
+    blockinfile:
+      create: yes
+      insertbefore: BOF
+      marker: '" ANSIBLE MANAGED BLOCK'
+      mode: 0664
+      path: ~/.vimrc
+      block: |
+        so ~/.carden_vimrc
 
   - name: Set up vundle plugin manager
     become: no

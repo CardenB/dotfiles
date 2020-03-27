@@ -1,0 +1,23 @@
+- block:
+  - name: Include python dependencies from python role.
+    include_role:
+      name: python
+
+  - name: Install YouCompleteMe dependencies
+    become: no
+    vars:
+      packages:
+        - cmake
+        - mono
+        - go
+        - nodejs
+    homebrew:
+        name: "{{ packages }}"
+        state: latest
+
+  - name: Install YouCompleteMe
+    become: no
+    command:
+      chdir: "{{ ycm_dir }}"
+      cmd: >-
+        python3 install.py --all

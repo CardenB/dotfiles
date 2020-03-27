@@ -13,20 +13,5 @@
         playbook.
     when: not (ycm_dir_state.stat.exists or ycm_dir_state.stat.isdir)
 
-  - name: Install YouCompleteMe dependencies
-    become: yes
-    apt:
-      pkg:
-        - build-essential
-        - cmake
-        - python3-dev
-      state: latest
-
-  - name: Install YouCompleteMe
-    become: no
-    command:
-      chdir: "{{ ycm_dir }}"
-      cmd: >-
-        python3 install.py --clangd-completer
-      # cd ~/.vim/bundle/YouCompleteMe
-      # python3 install.py --clangd-completer
+  # Install dependencies according to platform.
+  - include: "{{ ansible_distribution }}.yml"

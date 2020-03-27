@@ -1,0 +1,5 @@
+- name: Install vim for MacOS
+  become: no
+  homebrew:
+      name: vim
+      state: latest

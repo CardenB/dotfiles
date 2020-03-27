@@ -1,0 +1,16 @@
+- block:
+  - name: Install YouCompleteMe dependencies
+    become: yes
+    apt:
+      pkg:
+        - build-essential
+        - cmake
+        - python3-dev
+      state: latest
+
+  - name: Install YouCompleteMe
+    become: no
+    command:
+      chdir: "{{ ycm_dir }}"
+      cmd: >-
+        python3 install.py --clangd-completer

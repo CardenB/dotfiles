@@ -17,4 +17,5 @@
     copy:
       src: gitflow.py
       dest: "{{ local_bin }}/gitflow"
+      mode: 0744
     tags: gitflow

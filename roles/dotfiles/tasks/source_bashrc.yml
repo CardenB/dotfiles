@@ -10,4 +10,4 @@
     fail:
       msg: >-
         Failure occured that is not acceptable.
-    when: not "{{ cruise }}"
+    when: src_result.failed and not cruise

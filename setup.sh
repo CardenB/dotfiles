@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Setup specific to MacOS
 if [[ "$OSTYPE" == "darwin"* ]]; then

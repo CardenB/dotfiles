@@ -1,4 +1,9 @@
 - block:
+  - name: Set default shell to bash for Mac
+    become: no
+    command: chsh -s /bin/bash
+    when: ansible_distribution == "MacOSX"
+
   - name: Copy relevant dotfiles
     become: no
     copy:

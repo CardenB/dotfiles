@@ -132,6 +132,13 @@ alias gitflow="python3 ~/.local/bin/gitflow"
 
 
 # Manage virtual environments
+export VIRTUALENVWRAPPER_PYTHON=$(which python3)
 export WORKON_HOME=~/Envs
 mkdir -p $WORKON_HOME
-. ~/.local/bin/virtualenvwrapper.sh
+VENV_FILE=~/.local/bin/virtualenvwrapper.sh
+OTHER_VENV_FILE=/usr/local/bin/virtualenvwrapper.sh
+if [[ -f "$VENV_FILE" ]]; then
+  . $VENV_FILE
+elif [[ -f "$OTHER_VENV_FILE" ]]; then
+  . $OTHER_VENV_FILE
+fi

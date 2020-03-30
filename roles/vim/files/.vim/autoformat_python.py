@@ -28,7 +28,7 @@ def main():
             'style_config': {
                 'based_on_style': 'pep8',
                 'dedent_closing_brackets': 'false',
-                'split_all_top_level_commas_separated_values': 'true',
+                'split_all_top_level_comma_separated_values': 'true',
             }
     }
 

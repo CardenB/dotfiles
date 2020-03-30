@@ -1,13 +1,23 @@
 - block:
   - include: "{{ ansible_distribution }}.yml"
 
-  - name: Install python packages
+  - name: Install termcolor for gitflow
     pip:
       executable: pip3
       name: termcolor
       state: latest
       extra_args: --user
     tags: [python, gitflow]
+
+  - name: Install general python packages.
+    pip:
+      executable: pip3
+      name:
+        - autopep8
+        - yapf
+      state: latest
+      extra_args: --user
+    tags: [python]
 
   - name: Manage virtual environments
     pip:

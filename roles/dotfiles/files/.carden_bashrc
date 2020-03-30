@@ -129,3 +129,9 @@ fi
 set -o vi
 
 alias gitflow="python3 ~/.local/bin/gitflow"
+
+
+# Manage virtual environments
+export WORKON_HOME=~/Envs
+mkdir -p $WORKON_HOME
+. ~/.local/bin/virtualenvwrapper.sh

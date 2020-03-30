@@ -8,3 +8,11 @@
       state: latest
       extra_args: --user
     tags: [python, gitflow]
+
+  - name: Manage virtual environments
+    pip:
+      executable: pip3
+      name: virtualenvwrapper
+      state: latest
+      extra_args: --user
+    tags: [python]

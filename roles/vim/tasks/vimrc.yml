@@ -14,7 +14,7 @@
     blockinfile:
       create: yes
       insertbefore: BOF
-      marker: '" ANSIBLE MANAGED BLOCK'
+      marker: '" {mark} Source personal vimrc'
       mode: 0664
       path: ~/.vimrc
       block: |

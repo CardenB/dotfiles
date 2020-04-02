@@ -48,23 +48,22 @@ Plugin 'tpope/vim-fugitive'
 " Enables features like `:Gbrowse`.
 Plugin 'tpope/vim-rhubarb'
 
-" Plugin for fuzzy searching files.
-Plugin 'ctrlpvim/ctrlp.vim'
-
 " Plugin for vue.js syntax highlighting.
 Plugin 'posva/vim-vue'
 Plugin 'leafgarland/typescript-vim'
-
-" Plugin for faster ctrlp fuzzy searching.
-" Disabled in favor of fzf.
-" Plugin 'wincent/command-t'
 
 " Plugin for faster cmdt fuzzy searching.
 Plugin 'junegunn/fzf'
 Plugin 'junegunn/fzf.vim'
 
+" Plugin for managing extended vim sessions.
+" vim-misc is required for vim-session.
+Plugin 'xolox/vim-misc'
+Plugin 'xolox/vim-session'
+
 " All of your Plugins must be added before the following line
 call vundle#end()                   " required
+
 " Attempt to determine the type of a file based on its name and possibly its
 " contents. Use this to allow intelligent auto-indenting for each filetype,
 " and for plugins that are filetype specific.
@@ -314,11 +313,6 @@ endfunction
 
 nmap ,s :call SwitchSourceHeader()<CR>
 
-
-" Map <C-L> (redraw screen) to also turn off search highlighting until the
-" next search
-"nnoremap <C-L>'a0:nohl<CR><C-L>
-
 "------------------------------------------------------------}
 " Visual Elements
 "
@@ -344,7 +338,6 @@ let g:ycm_global_ycm_extra_conf='~/.ycm_extra_conf.py'
 " Set this to make ycm a syntastic checker
 let g:ycm_register_as_syntastic_checker=0
 " Set this to use CTags
-" let g:ycm_collect_identifiers_from_tags_files=1
 let g:ycm_goto_buffer_command = 'horizontal-split'
 nnoremap <C-\> :YcmCompleter GoToDefinition<CR>
 nnoremap <bar> :YcmCompleter GoToDeclaration<CR>
@@ -363,9 +356,6 @@ let g:syntastic_enable_signs=1
 let g:syntastic_error_symbol = '✗'
 let g:syntastic_warning_symbol = '⚠'
 let g:syntastic_python_checkers=['pep8', 'flake8']
-" set statusline+=%#warningmsg#
-" set statusline+=%{SyntasticStatuslineFlag()}
-" set statusline+=%*gbar
 
 "------------------------------------------------------------}
 " Grepper Config
@@ -417,71 +407,10 @@ xmap gs  <plug>(GrepperOperator)
 "------------------------------------------------------------}
 " Rhubarb Config
 "
-" Enable vim-fugitive to use Gbrose properly.
+" Enable vim-fugitive to use Gbrowse properly.
 " See more here: https://github.com/tpope/vim-fugitive
 " To get this to work using git enterprise, you must add the base url here.
 " let g:github_enterprise_urls = ['']
-
-"------------------------------------------------------------}
-" CtrlP Config
-"
-" Press <c-p> for fuzzy searching. With the quickfix window open, press <c-d>
-" to switch to filename only searching.
-"
-" Fix the max file limit which makes things slower but prevents files from
-" not being found.
-let g:ctrlp_max_files=0
-let g:ctrlp_types = ['buf', 'mru', 'fil']
-
-"------------------------------------------------------------}
-" CmdT Config
-"
-"
-" The following mappings are active when the prompt has focus:
-" 
-"     <BS>        delete the character to the left of the cursor
-"     <Del>       delete the character at the cursor
-"     <Left>      move the cursor one character to the left
-"     <C-h>       move the cursor one character to the left
-"     <Right>     move the cursor one character to the right
-"     <C-l>       move the cursor one character to the right
-"     <C-a>       move the cursor to the start (left)
-"     <C-e>       move the cursor to the end (right)
-"     <C-u>       clear the contents of the prompt
-"     <Tab>       change focus to the file listing
-"
-" The following mappings are active when the file listing has focus:
-" 
-"     <Tab>       change focus to the prompt
-" 
-" The following mappings are active when either the prompt or the file listing
-" has focus:
-" 
-"     <CR>        open the selected file
-"     <C-CR>      open the selected file in a new split window
-"     <C-s>       open the selected file in a new split window
-"     <C-v>       open the selected file in a new vertical split window
-"     <C-t>       open the selected file in a new tab
-"     <C-d>       delete the selected buffer
-"     <C-j>       select next file in the file listing
-"     <C-n>       select next file in the file listing
-"     <Down>      select next file in the file listing
-"     <C-k>       select previous file in the file listing
-"     <C-p>       select previous file in the file listing
-"     <Up>        select previous file in the file listing
-"     <C-f>       flush the cache (see |:CommandTFlush| for details)
-"     <C-q>       place the current matches in the quickfix window
-"     <C-c>       cancel (dismisses file listing)
-" 
-" The following is also available on terminals which support it:
-" 
-"     <Esc>       cancel (dismisses file listing)
-" 
-" 
-" Fix the max file limit which makes things slower but prevents files from
-" not being found.
-let g:CommandTMaxFiles=900000
-
 
 "------------------------------------------------------------}
 " FZF Config

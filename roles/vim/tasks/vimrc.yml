@@ -20,7 +20,6 @@
       block: |
         so ~/.carden_vimrc
 
-
   - name: Vim plugin clean
     become: no
     # Need to ignore errors since vim gives return code 1 here for some reason.
@@ -36,4 +35,3 @@
     # See: https://stackoverflow.com/questions/33672491/how-to-use-ansible-to-provision-vim-vundle-plugin
     command:
       cmd: vim -E -s -c "source {{ home_dir }}/.vimrc" -c PluginInstall! -c qall
-

@@ -15,8 +15,20 @@
       name:
         - autopep8
         - yapf
+        - ipdb
+        - ipython
       state: latest
       extra_args: --user
+    tags: [python]
+
+  - name: Copy ipython config.
+    become: no
+    copy:
+      src: "{{ item }}"
+      dest: "~/.ipython/profile_default/"
+      mode: 0664
+    loop:
+      - ipython_config.py
     tags: [python]
 
   - name: Manage virtual environments

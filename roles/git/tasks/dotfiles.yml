@@ -2,22 +2,20 @@
   - name: Copy relevant dotfiles
     become: no
     copy:
-      src: ".gitconfig"
-      dest: "~/.gitconfig"
+      src: "{{ item }}"
+      dest: "~/"
       mode: 0664
+    loop:
+      - .gitconfig
+      - .gitignore
 
   - name: Insert github enterprise host to git config for hubcli.
     become: no
     when: cruise
-    blockinfile:
-      path: ~/.gitconfig
-      create: yes
-      insertafter: EOF
-      mode: 0664
-      marker: "# Configures hubcli for cruise enterprise"
-      block: |
-        [hub]
-          host = github.robot.car
+    git_config:
+        name: hub.host
+        scope: global
+        value: github.robot.car
 
   - name: Check if github token file already exists.
     become: no
@@ -53,13 +51,10 @@
   - name: Insert github enterprise host to git config for hubcli.
     become: no
     when: zoox
-    blockinfile:
-      path: ~/.gitconfig
-      create: yes
-      insertafter: EOF
-      mode: 0664
-      marker: "# Configures hubcli for zoox enterprise"
-      block: |
-        [hub]
-          protocol = https
-          host = git.zooxlabs.com
+    git_config:
+        name: "{{ item.name }}"
+        scope: global
+        value: "{{ item.value }}"
+    with_items:
+        - {name: "hub.host", value: "git.zooxlabs.com"}
+        - {name: "hub.protocal", value: "https"}

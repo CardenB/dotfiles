@@ -3,7 +3,7 @@
   email = cardenbag@gmail.com
 [core]
   editor = vim
-  excludesfile = /home/carden/.gitignore
+  excludesfile = ~/.gitignore
 [credential]
   helper = cache --timeout=86400
 [push]

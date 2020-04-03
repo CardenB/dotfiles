@@ -142,3 +142,9 @@ if [[ -f "$VENV_FILE" ]]; then
 elif [[ -f "$OTHER_VENV_FILE" ]]; then
   . $OTHER_VENV_FILE
 fi
+
+# Allows for tmux-ing to a server with iterm2 integration.
+# Ex: tmux_ssh personal-desktop # Where personal-desktop is an ssh alias.
+tmux_ssh() {
+  ssh -t "$1" 'tmux -CC new -A -s carden';
+}

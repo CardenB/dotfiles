@@ -427,6 +427,7 @@ xmap gs  <plug>(GrepperOperator)
 "
 " Map file search to <leader>f
 nmap <leader>f :GFiles<cr>
+nmap  <leader>b :Buffers<CR>
 
 "------------------------------------------------------------}
 " Vim-session Config

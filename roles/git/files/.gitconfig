@@ -29,6 +29,9 @@
   oldest-ancestor = !bash -c 'diff --old-line-format= --new-line-format= <(git rev-list --first-parent \"${1:-master}\") <(git rev-list --first-parent \"${2:-HEAD}\") | head -1' -
   pullr = pull --rebase=preserve
   refresh = remote update -p
+  rebase-base = "!f() { \
+      git rebase $(git merge-base $(git parent) $(git curbranch)) $@; \
+  }; f"
   # Prints the name of the currently checked out branch.
   curbranch = "!f() { \
       git rev-parse --abbrev-ref HEAD | grep -v ^HEAD$ || git rev-parse HEAD; \
@@ -81,4 +84,9 @@
   difftool-parent = "!git difftool `git parent`..HEAD $@"
   pullc = "!git pull --rebase origin `git curbranch`"
   pr-parent = "!git pushh && hub pull-request -b `git parent` -h `git curbranch` $@"
+  pr = "!git pushh && hub pull-request -h `git curbranch` -b $1"
   refresh = "!git fetch origin $1:$1"
+  auth = "!f() { \
+    eval $(ssh-agent); \
+    ssh-add -k ~/.ssh/id_rsa; \
+  }; f"

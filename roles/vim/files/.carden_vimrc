@@ -269,9 +269,9 @@ nnoremap ,, :call SourceVimrc()<cr>
 :  py3f ~/.vim/autoformat_python.py
 :endfunction
 " format all lines for python files.
-autocmd FileType python nnoremap <silent> <S-F> :call FormatEntirePythonFile()<cr>
+autocmd FileType python nnoremap <silent> ,<S-F> :call FormatEntirePythonFile()<cr>
 " Format highlighted lines for python files.
-autocmd FileType python vnoremap <silent> <S-F> :call FormatPythonFileForLines()<cr>
+autocmd FileType python vnoremap <silent> ,<S-F> :call FormatPythonFileForLines()<cr>
 
 let g:clang_format_path='clang-format-3.6'
 :function! FormatFile()
@@ -317,7 +317,23 @@ function! SwitchSourceHeader()
   endif
 endfunction
 
+" Switch between .h and .cpp files with ,s.
 nmap ,s :call SwitchSourceHeader()<CR>
+" Exit file mapped to ,q.
+nnoremap  ,q            :q <CR>
+" Refresh file mapped to ,e.
+nnoremap  ,e            :e <CR>
+" Navigate tabs with <shift>-<nav_key>
+nnoremap  H             :tabprevious <CR>
+nnoremap  K             <Nop>
+nnoremap  L             :tabnext <CR>
+" Navigate splits with <ctrl>-<nav_key>
+nnoremap  <C-H>  <C-W><C-H>
+" Special case because <C-L> conflicts with some prior binding.
+nnoremap  <NL>   <C-W><NL>
+nnoremap  <C-K>  <C-W><C-K>
+nnoremap  <C-L>  <C-W><C-L>
+
 
 "------------------------------------------------------------}
 " Visual Elements
@@ -392,6 +408,8 @@ let g:grepper.tools = ['rg', 'git', 'grep']
 " In visual mode, it uses the current selection.
 nmap gs  <plug>(GrepperOperator)
 xmap gs  <plug>(GrepperOperator)
+" Open grepper with leader-g
+nnoremap  <leader>g     :Grepper <CR>
 
 "------------------------------------------------------------}
 " Fugitive Config

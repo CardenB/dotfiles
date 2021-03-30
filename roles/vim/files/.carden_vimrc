@@ -439,7 +439,12 @@ nnoremap  <leader>g     :Grepper <CR>
 " See more here: https://github.com/tpope/vim-fugitive
 " Map Gbrowse! to gb only when in visual mode to get a link to the specific
 " lines on github.
-xmap gb :Gbrowse!<cr>
+nmap gb :Gbrowse!<cr>
+" Map Gblame to gB only when in visual mode to get the commit history for the
+" current file.
+" TODO(carden): Find a way to skip the "file has changed since editing" prompt
+"               that occurs on other files after launching Gblame.
+nmap gB :Gblame<cr>
 
 "------------------------------------------------------------}
 " Rhubarb Config

@@ -330,6 +330,8 @@ endfunction
 nmap ,s :call SwitchSourceHeader()<CR>
 " Exit file mapped to ,q.
 nnoremap  ,q            :q <CR>
+" Exit all files mapped to ,Q.
+nnoremap  ,Q            :qa <CR>
 " Refresh file mapped to ,e.
 nnoremap  ,e            :e <CR>
 " Navigate tabs with <shift>-<nav_key>

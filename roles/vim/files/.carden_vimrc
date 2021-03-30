@@ -244,10 +244,19 @@ nmap Y y$
 :function! CloseTab()
 :  tabc
 :endfunction
-:function! ConfirmCloseTab()
-:  call BinaryConfirmDecorator(function("CloseTab"), "Close Tab?", "&Yes\n&No")
+
+:function! ConfirmCloseTab(should_confirm)
+:  if a:should_confirm == 1
+:    call BinaryConfirmDecorator(function("CloseTab"), "Close Tab?", "&Yes\n&No")
+:  else
+:    call CloseTab()
+:  endif
 :endfunction
-nnoremap ,w :call ConfirmCloseTab()<cr>
+
+" Close tab with confirmation dialog.
+nnoremap ,w :call ConfirmCloseTab(1)<cr>
+" Close tab but skip confirmation dialog.
+nnoremap ,W :call ConfirmCloseTab(0)<cr>
 
 " Create a function to reload vimrc. Checks if it already exists to avoid
 " redefining the function during the function call.

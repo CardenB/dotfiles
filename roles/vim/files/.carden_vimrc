@@ -455,9 +455,19 @@ xmap gb :Gbrowse!<cr>
 "
 " Fuzzy file search for quickly finding files in your directory.
 "
-" Map file search to <leader>f
+" Map git tracked file search to <leader>f
+" This will open in a new window.
 nmap <leader>f :GFiles<cr>
-nmap  <leader>b :Buffers<CR>
+" Search recently open buffers with <leader>b.
+" This will open in a new window.
+nmap <leader>b :Buffers<CR>
+" Search open windows with <leader>w.
+" This will jump to the location in the currently selected
+" split.
+nmap <leader>w :Windows<CR>
+" Search all lines with <leader>l.
+" This will open in a new window.
+nmap <leader>l :Lines<CR>
 
 "------------------------------------------------------------}
 " Vim-session Config

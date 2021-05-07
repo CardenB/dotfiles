@@ -201,7 +201,7 @@ alias server="python3 -m http.server $1"
 
 # Prune docker images older than one week (7 * 24hr = 168hr)
 # https://stackoverflow.com/questions/50737059/how-to-remove-docker-images-which-created-7-days-ago-automatically
-alias docker_prune_old="docker image prune -a --force --filter 'until=168h'"
+alias docker-prune-old="docker image prune -a --force --filter 'until=168h'"
 
 # Allows for tmux-ing to a server with iterm2 integration.
 # Ex: tmux_ssh personal-desktop # Where personal-desktop is an ssh alias.

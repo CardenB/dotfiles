@@ -59,21 +59,59 @@ if [ -n "$force_color_prompt" ]; then
     fi
 fi
 
-if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
-else
-    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
-fi
-unset color_prompt force_color_prompt
 
-# If this is an xterm set the title to user@host:dir
-case "$TERM" in
-xterm*|rxvt*)
-    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
-    ;;
-*)
-    ;;
-esac
+# Function to get info about what virtualenv you're currently in so you can add to PS1.
+function virtualenv_info(){
+    # Get Virtual Env
+    if [[ -n "$VIRTUAL_ENV" ]]; then
+        # Strip out the path and just leave the env name
+        venv="${VIRTUAL_ENV##*/}"
+    else
+        # In case you don't have one activated
+        venv=''
+    fi
+    [[ -n "$venv" ]] && echo "($venv) "
+}
+
+# disable the default virtualenv prompt change
+export VIRTUAL_ENV_DISABLE_PROMPT=1
+
+VENV="\$(virtualenv_info)";
+# the '...' are for irrelevant info here.
+# export PS1="... ${VENV} ..."
+export PS1="\u@\h:\w\$ "
+
+# Function to handle formatting of PS1.
+# TODO(carden): Debug the escape sequences here.
+ps1_stuff() {
+  # Handle color_prompt logic from before in PS1.
+  # TODO(carden): Determine the source for this and ensure it's not causing issues.
+  if [ "$color_prompt" = yes ]; then
+      # PS1=$auth_str", "'${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+      PS1=$auth_str", "'${debian_chroot:+($debian_chroot)}\u@\h:\w\\$'
+  else
+      # PS1=$auth_str", "'${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+      PS1=$auth_str", "'${debian_chroot:+($debian_chroot)}\u@\h:\w\\$ '
+  fi
+  unset color_prompt force_color_prompt
+
+  # If this is an xterm set the title to user@host:dir
+  case "$TERM" in
+  xterm*|rxvt*)
+      # PS1=$auth_str", ""\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]"
+      PS1=$auth_str", ${debian_chroot:+($debian_chroot)}\u@\h:\w\\$ "
+      ;;
+  *)
+      ;;
+  esac
+
+  # Prepend VENV status to PS1 here.
+  PS1="${VENV}"$PS1
+}
+PROMPT_COMMAND=ps1_stuff
+# Some debug stuff
+# PROMPT_COMMAND=$(echo '')
+# PS1=""
 
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
@@ -125,8 +163,6 @@ if [ ! $TMUX ]; then
     tmux new-session -A -s carden
 fi
 
-# Enables vi mode for the terminal.
-set -o vi
 
 alias gitflow="python3 ~/.local/bin/gitflow"
 
@@ -142,6 +178,30 @@ if [[ -f "$VENV_FILE" ]]; then
 elif [[ -f "$OTHER_VENV_FILE" ]]; then
   . $OTHER_VENV_FILE
 fi
+
+export EDITOR=vim
+# Needed to fix an issue with auth ssh over tmux on the host machine.
+SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock
+
+# Enables vi mode for the terminal.
+set -o vi;
+
+# Create a find and replace function using ripgrep + sed.
+# I don't think this will handle escaping characters well.
+ripgrep_replace() {
+    src=$1
+    dst=$2
+    rg "${src}" -l | xargs sed -i "s/${src}/${dst}/g"
+}
+alias ripgrep-replace=ripgrep_replace
+
+# Runs a simple http server using python3.
+# First arg is a port number.
+alias server="python3 -m http.server $1"
+
+# Prune docker images older than one week (7 * 24hr = 168hr)
+# https://stackoverflow.com/questions/50737059/how-to-remove-docker-images-which-created-7-days-ago-automatically
+alias docker_prune_old="docker image prune -a --force --filter 'until=168h'"
 
 # Allows for tmux-ing to a server with iterm2 integration.
 # Ex: tmux_ssh personal-desktop # Where personal-desktop is an ssh alias.

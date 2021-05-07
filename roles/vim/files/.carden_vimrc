@@ -349,8 +349,8 @@ nnoremap  <C-L>  <C-W><C-L>
 "------------------------------------------------------------}
 " Visual Elements
 "
-" Create a color column at 80 character width
-set colorcolumn=80
+" Create a color column at character width for formatting.
+set colorcolumn=120
 " Setup solorized color scheme
 syntax enable
 set background=dark

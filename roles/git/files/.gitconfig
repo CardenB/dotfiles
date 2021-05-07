@@ -90,3 +90,20 @@
     eval $(ssh-agent); \
     ssh-add -k ~/.ssh/id_rsa; \
   }; f"
+  # Requires fzf
+  ck = "!f() { \
+    git checkout '$(git branch — all | fzf| tr -d ‘[:space:]’)' \
+  }; f"
+  # TODO(carden): Use gitflow to generate fzf string and then use this sed to
+  #               strip out the actual branch name:
+  # | sed 's/^\s\+|-> //' | sed 's/\s\+.*//'
+  bd = "!f() { \
+    git branch -D '$(git branch — all | fzf| tr -d ‘[:space:]’)' \
+  }; f"
+[hub]
+	host = github.robot.car
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true

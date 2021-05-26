@@ -198,7 +198,7 @@ set expandtab
 "------------------------------------------------------------
 " Mappings 
 "
-" Type `gb` to go to the BUILD file for this file.
+" Type `,b` to go to the BUILD file for this file.
 function! GoToBuild()
 python3 << EOF
 import vim
@@ -223,7 +223,7 @@ except Exception as e:
    print("Something went wrong: " + str(e))
 EOF
 endfunction
-nnoremap gb :call GoToBuild()<cr>
+nnoremap ,b :call GoToBuild()<cr>
 
 " Useful mappings
 " Map Y to act like D and C, i.e. to yank until EOL, rather than act as yy,

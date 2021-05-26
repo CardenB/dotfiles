@@ -441,9 +441,15 @@ nnoremap  <leader>g     :Grepper <CR>
 " visual highlights! :Git for running any arbitrary command, and :Git! will
 " open the output of the command in a temp file.
 " See more here: https://github.com/tpope/vim-fugitive
+
+" When in an enterprise doman, be sure to populate this value for vim-fugitive
+" to work.
+" let g:fugitive_github_domains = ['github.carden.com']
+
 " Map Gbrowse! to gb only when in visual mode to get a link to the specific
 " lines on github.
-nmap gb :Gbrowse!<cr>
+nnoremap gb :Gbrowse!<cr>
+vnoremap gb :Gbrowse!<cr>
 " Map Gblame to gB only when in visual mode to get the commit history for the
 " current file.
 " TODO(carden): Find a way to skip the "file has changed since editing" prompt

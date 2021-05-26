@@ -176,6 +176,8 @@ set notimeout ttimeout ttimeoutlen=200
 " Use ,p to toggle between 'paste' and 'nopaste'
 nnoremap ,p :set invpaste paste?<CR>
 set pastetoggle=,p
+" Default to not read-only in vimdiff
+set noro
 
 set showmode
 

@@ -347,6 +347,8 @@ nnoremap  <C-H>  <C-W><C-H>
 nnoremap  <NL>   <C-W><NL>
 nnoremap  <C-K>  <C-W><C-K>
 nnoremap  <C-L>  <C-W><C-L>
+" Add a keybind for redraw for whenever you need to refresh the screen.
+nnoremap ,r :redraw! <CR>
 
 
 "------------------------------------------------------------}

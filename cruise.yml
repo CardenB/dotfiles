@@ -12,5 +12,7 @@
     - {role: git, tags: [git]}
     - {role: gitflow, tags: [gitflow]}
     - {role: vim, tags: [vim]}
+      # ycm requires cmake version 3.14 or higher now.
+    - {role: ansible-role-cmake, tags: [cmake, vim, ycm], cmake_version: 3.14}
     - {role: youcompleteme, tags: [vim, ycm]}
     - {role: dotfiles, tags: [dotfiles]}

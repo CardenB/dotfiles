@@ -168,7 +168,8 @@ set visualbell
 set t_vb=
 " Set the command window height to 2 lines, to avoid many cases of having to
 " "press <Enter> to continue"
-set cmdheight=2
+" We set cmdheight=1 here at our own peril.
+set cmdheight=1
 " Display line numbers on the left
 set number
 " Quickly time out on keycodes, but never time out on mappings

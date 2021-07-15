@@ -2,18 +2,37 @@
   - name: Install git.
     become: yes
     apt:
-      name: vim
+      name: git
       state: latest
 
-  - apt_repository:
-      repo: ppa:cpick/hub
-      state: present
-    become: yes
-    name: Add repository for hubcli
+  - name: check latest hubcli
+    uri:
+      url: https://api.github.com/repos/github/hub/releases/latest
+      return_content: true
+    register: hubcli_latest
 
-  - name: Install hubcli for github
+  - name: Creates hubcli output directory
+    file:
+      path: "/tmp/hubcli"
+      state: directory
+
+  - name: "Extracting hubcli installation package: {{ hubcli_latest.json.tag_name }}"
+    loop: "{{ hubcli_latest.json.assets }}"
+    when:
+      - "'linux-amd64' in item.name"
+      - "'.tgz' in item.name"
+    unarchive:
+      remote_src: yes
+      src: "{{ item.browser_download_url }}"
+      dest: "/tmp/hubcli"
+      keep_newer: yes
+      extra_opts:
+      - --strip-components=1
+      - --no-anchored
+    register: hubcli_extraction
+
+  - name: Install hubcli
     become: yes
-    apt:
-      update_cache: yes
-      name: hub
-      state: latest
+    shell: "/tmp/hubcli/install"
+    ignore_errors: False
+    when: hubcli_extraction

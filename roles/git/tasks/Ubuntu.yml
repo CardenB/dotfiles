@@ -33,6 +33,6 @@
 
   - name: Install hubcli
     become: yes
-    shell: "/tmp/hubcli/install"
+    shell: "prefix={{ local_dir }} /tmp/hubcli/install"
     ignore_errors: False
     when: hubcli_extraction

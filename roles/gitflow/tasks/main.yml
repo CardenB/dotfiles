@@ -9,7 +9,7 @@
     pip:
       executable: pip3
       name: GitPython
-      state: latest
+      state: 3.1.18
       extra_args: --user
     tags: [gitflow]
 

@@ -45,7 +45,7 @@ Plugin 'mhinz/vim-grepper'
 Plugin 'tpope/vim-fugitive'
 
 " Plugin for handling github from vim-fugitive.
-" Enables features like `:Gbrowse`.
+" Enables features like `:GBrowse`.
 Plugin 'tpope/vim-rhubarb'
 
 " Plugin for vue.js syntax highlighting.
@@ -439,7 +439,7 @@ nnoremap  <leader>g     :Grepper <CR>
 " :Gmove does git mv and renames teh buffer, and :Gdelete does git rm and
 " deletes the file. Use :Ggrep to search teh work tree (or any arbitrary
 " commit) with `git grep`. :Glog loads all previous revisions of a file into
-" the quickfix list for iteration through the file's evolutions. Use :Gbrowse
+" the quickfix list for iteration through the file's evolutions. Use :GBrowse
 " to open the web front-end for github with optional line range specified by
 " visual highlights! :Git for running any arbitrary command, and :Git! will
 " open the output of the command in a temp file.
@@ -449,10 +449,10 @@ nnoremap  <leader>g     :Grepper <CR>
 " to work.
 " let g:fugitive_github_domains = ['github.carden.com']
 
-" Map Gbrowse! to gb only when in visual mode to get a link to the specific
+" Map GBrowse! to gb only when in visual mode to get a link to the specific
 " lines on github.
-nnoremap gb :Gbrowse!<cr>
-vnoremap gb :Gbrowse!<cr>
+nnoremap gb :GBrowse!<cr>
+vnoremap gb :GBrowse!<cr>
 " Map Gblame to gB only when in visual mode to get the commit history for the
 " current file.
 " TODO(carden): Find a way to skip the "file has changed since editing" prompt
@@ -462,7 +462,7 @@ nmap gB :Gblame<cr>
 "------------------------------------------------------------}
 " Rhubarb Config
 "
-" Enable vim-fugitive to use Gbrowse properly.
+" Enable vim-fugitive to use GBrowse properly.
 " See more here: https://github.com/tpope/vim-fugitive
 " To get this to work using git enterprise, you must add the base url here.
 " let g:github_enterprise_urls = ['']

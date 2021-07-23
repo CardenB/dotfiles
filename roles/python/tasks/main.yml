@@ -15,6 +15,7 @@
       name:
         - autopep8
         - yapf
+        - black
         - ipdb
         - ipython
       state: latest

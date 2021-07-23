@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-import autopep8
-import yapf
 from yapf.yapflib import yapf_api
 import difflib
 import json
@@ -22,18 +20,26 @@ else:
 
 
 def main():
+    """
+    Works by formatting the entire file and writing it back out to the buffer.
+    If only formatting specific lines, operates line by line, formatting the entire file each time, and merging the formatted result back into the buffer.
+    """
     if not any([USE_AUTOPEP8, USE_YAPF, USE_BLACK]):
         return 0
     # Get the current text.
     buf = vim.current.buffer
-    text = "\n".join(buf)
 
-    # Determine range to format.
-    lines = None
-    lines = [int(vim.current.range.start + 1), int(vim.current.range.end + 1)]
     # Load the lines variable in vimrc if set.
+    # This deals with the case where lines == "all"
     if int(vim.eval('exists("l:lines")')):
         lines = vim.eval("l:lines")
+        start, end = None, None
+    else:
+        # Determine range to format.
+        lines = [int(vim.current.range.start), int(vim.current.range.end+1)]
+        start, end = lines[0], lines[1]
+        assert not USE_BLACK, "Black only formats the entire file at once, not specific lines."
+    text = '\n'.join(buf)
     yapf_options = {
         "unformatted_source": text,
         "style_config": {
@@ -49,15 +55,9 @@ def main():
         "max_line_length": 79,
     }
     # Use start, end indices only for black formatter.
-    start, end = None, None
     if lines != "all":
         autopep8_options["line_range"] = lines
-        yapf_options["lines"] = [(lines[0], lines[1] + 1)]
-        if USE_BLACK:
-            # Need to index the text for formatting if using black.
-            start = lines[0]
-            end = lines[1] + 1
-            text = "\n".join(buf[start:end])
+        yapf_options["lines"] = [(start, end)]
 
     fixed_code = None
     if USE_YAPF:
@@ -65,19 +65,17 @@ def main():
     if USE_AUTOPEP8:
         fixed_code = autopep8.fix_code(text, options=autopep8_options)
     if USE_BLACK:
+        # Black does not format specific lines unfortunately.
         fixed_code = black.format_str(text, mode=black.Mode(**black_options))
-        # Need to inject the formatted code into the original buffer.
-        if lines != "all":
-            fixed_code = "\n".join(buf[:start]) + fixed_code + "\n".join(buf[end:])
-    if not fixed_code:
-        print('No output from autoformatter!')
-    else:
-        line_arr = fixed_code.split('\n')[:-1]
-        # Execute the sequence of changes.
-        sequence = difflib.SequenceMatcher(None, vim.current.buffer, line_arr)
-        for op in reversed(sequence.get_opcodes()):
-            if op[0] is not 'equal':
-                vim.current.buffer[op[1]:op[2]] = line_arr[op[3]:op[4]]
+
+    assert fixed_code, 'No output from autoformatter!'
+
+    line_arr = fixed_code.split('\n')[:-1]
+    # Execute the sequence of changes.
+    sequence = difflib.SequenceMatcher(None, vim.current.buffer, line_arr)
+    for op in reversed(sequence.get_opcodes()):
+        if op[0] is not 'equal':
+            vim.current.buffer[op[1]:op[2]] = line_arr[op[3]:op[4]]
 
 
 if __name__ == '__main__':

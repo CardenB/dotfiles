@@ -26,7 +26,7 @@
   pushh = push origin HEAD
   pushhf = push --force-with-lease origin HEAD
   amend = commit --amend -C HEAD
-  oldest-ancestor = !bash -c 'diff --old-line-format= --new-line-format= <(git rev-list --first-parent \"${1:-master}\") <(git rev-list --first-parent \"${2:-HEAD}\") | head -1' -
+  oldest-ancestor = !bash -c 'diff --old-line-format= --new-line-format= <(git rev-list --first-parent \"${1:-master}\") <(git rev-list --first-parent \"${2:-HEAD}\") | head -1' -A
   pullr = pull --rebase=preserve
   refresh = remote update -p
   rebase-base = "!f() { \
@@ -38,11 +38,11 @@
     }; f"
   # Prints the name of the upstream branch.
   parent = "!f() { \
-    git name-rev --name-only $(git rev-parse `git curbranch`@{upstream}); \
+    git rev-parse --abbrev-ref --symbolic-full-name @{u}; \
   }; f"
   # Prints the name of the branch upstream to the specified branch.
   parent-of = "!f() { \
-    git name-rev --name-only $(git rev-parse $1@{upstream}); \
+    git rev-parse --abbrev-ref --symbolic-full-name $1@{u}; \
   }; f"
   # Sets the upstream of the currently checked out branch to the specified
   # branch.
@@ -90,15 +90,18 @@
     eval $(ssh-agent); \
     ssh-add -k ~/.ssh/id_rsa; \
   }; f"
+  diff-count = "!f() { \
+    git rev-list --count --left-right `git curbranch`...$1; \
+  }; f"
   # Requires fzf
-  ck = "!f() { \
-    git checkout '$(git branch — all | fzf| tr -d ‘[:space:]’)' \
+  ch = "!f() { \
+    git checkout $(git branch | fzf| tr -d ‘[:space:]’); \
   }; f"
   # TODO(carden): Use gitflow to generate fzf string and then use this sed to
   #               strip out the actual branch name:
   # | sed 's/^\s\+|-> //' | sed 's/\s\+.*//'
   bd = "!f() { \
-    git branch -D '$(git branch — all | fzf| tr -d ‘[:space:]’)' \
+    git branch -D $(git branch | fzf| tr -d ‘[:space:]’); \
   }; f"
 [hub]
 	host = github.robot.car

@@ -413,11 +413,12 @@ let g:syntastic_python_flake8_post_args="--max-line-length=120"
 " See more examples here:
 " https://github.com/mhinz/vim-grepper/wiki/example-configurations-and-mappings
 "
-" Can fill out a map of grepper setttings here or set them one by one below.
-let g:grepper = {'operator': {'tools': ['rg']}}
-"
+" Initialize Grepper settings so that they are all explicitly set below.
+let g:grepper = {}
+
 " Enable git grep and regular grep as grepping tools.
-let g:grepper.tools = ['rg', 'git', 'grep']
+let g:grepper.tools = ['rg']
+
 " Use grepper to jump to the first result that pops up in the current window.
 " let g:grepper.jump = 1
 " let g:grepper.next_tool = '<leader>g'
@@ -432,6 +433,32 @@ xmap gs  <plug>(GrepperOperator)
 " Open grepper with leader-g
 nnoremap  <leader>g     :Grepper <CR>
 
+" Function to run RipGrep on the given subdirectory.
+" Note: Requires vim-grepper!
+function! GrepSubdir(subdir)
+
+  " Have to call with execute here because we need to construct the command
+  " as a string.
+  execute ":Grepper -cd " . a:subdir
+endfunct!
+
+" Call Fzf to get a list of directories tracked by git and fuzzy search them.
+" Feed that into Grepper to allow the user to supply search criteria for
+" the directory.
+command! -bang FzfDirGrep call fzf#run(fzf#wrap({
+      \ 'source': 'git ls-files | sed s,/[^/]*$,, | sort | uniq',
+      \ 'sink': function("GrepSubdir")
+      \ }, <bang>0))
+
+" Other notes about this:
+" Not needed if using :Grepper -cd, but, for later reference, here is an
+" example of how the user could be prompted separately for search terms.
+" call inputsave()
+" silent let l:search = input('Enter grep search within subdir ' . a:subdir . ': ')
+" call inputrestore()
+" Not needed if using :Grepper -cd, but, for later reference, here is an
+" example of how the grep command could be executed directly.
+" execute ":GrepperRg " . l:search . ' ' .  a:subdir
 "------------------------------------------------------------}
 " Fugitive Config
 "

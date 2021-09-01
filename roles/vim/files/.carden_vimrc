@@ -378,9 +378,14 @@ let g:ycm_register_as_syntastic_checker=0
 " Set this to use CTags
 let g:ycm_goto_buffer_command = 'horizontal-split'
 nnoremap <C-\> :YcmCompleter GoToDefinition<CR>
-nnoremap <bar> :YcmCompleter GoToDeclaration<CR>
+nnoremap <bar> :YcmCompleter GoToInclude<CR>
+nnoremap ,<C-y> :YcmToggleLogs<CR>
+nnoremap ,<C-d> :YcmDebugInfo<CR>
+nnoremap ,<C-r> :YcmRestartServer<CR>
 nnoremap ,y :YcmCompleter FixIt<CR>
+nnoremap ,T :YcmCompleter GetTypeImprecise<CR>
 nnoremap ,t :YcmCompleter GetType<CR>
+nnoremap ,D :YcmCompleter GetDocImprecise<CR>
 nnoremap ,d :YcmCompleter GetDoc<CR>
 
 "------------------------------------------------------------}

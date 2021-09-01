@@ -450,6 +450,9 @@ command! -bang FzfDirGrep call fzf#run(fzf#wrap({
       \ 'sink': function("GrepSubdir")
       \ }, <bang>0))
 
+" Use Fzf to select a subdirectory for the grep criteria.
+nnoremap <leader>gd :FzfDirGrep <cr>
+
 " Other notes about this:
 " Not needed if using :Grepper -cd, but, for later reference, here is an
 " example of how the user could be prompted separately for search terms.
@@ -459,9 +462,6 @@ command! -bang FzfDirGrep call fzf#run(fzf#wrap({
 " Not needed if using :Grepper -cd, but, for later reference, here is an
 " example of how the grep command could be executed directly.
 " execute ":GrepperRg " . l:search . ' ' .  a:subdir
-
-" Use Fzf to select a subdirectory for the grep criteria.
-nnoremap <leader>gd :FzfDirGrep <cr>
 
 "------------------------------------------------------------}
 " Fugitive Config

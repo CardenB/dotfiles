@@ -436,7 +436,8 @@ nnoremap  <leader>g     :Grepper <CR>
 " Function to run RipGrep on the given subdirectory.
 " Note: Requires vim-grepper!
 function! GrepSubdir(subdir)
-
+  " Add this so that the fzf popup window doesn't cover all your code.
+  redraw
   " Have to call with execute here because we need to construct the command
   " as a string.
   execute ":Grepper -cd " . a:subdir

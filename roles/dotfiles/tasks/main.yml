@@ -20,7 +20,7 @@
     blockinfile:
       path: ~/.bashrc
       create: yes
-      marker: '" {mark} Source personal bashrc'
+      marker: '# {mark} Source personal bashrc'
       insertafter: EOF
       mode: 0664
       block: |

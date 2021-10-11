@@ -13,4 +13,4 @@
     command:
       chdir: "{{ ycm_dir }}"
       cmd: >-
-        python3.7 install.py --clangd-completer --cmake-path={{ cmake_install_dir}}/bin
+        python3.7 install.py --clangd-completer --cmake-path={{ cmake_install_dir}}bin/cmake

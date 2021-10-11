@@ -4,8 +4,8 @@
     apt:
       pkg:
         - build-essential
-        - cmake
-        - python3-dev
+        - g++-8
+        - gcc-8
       state: latest
 
   - name: Install YouCompleteMe
@@ -13,4 +13,4 @@
     command:
       chdir: "{{ ycm_dir }}"
       cmd: >-
-        python3 install.py --clangd-completer
+        python3.7 install.py --clangd-completer --cmake-path={{ cmake_install_dir}}/bin

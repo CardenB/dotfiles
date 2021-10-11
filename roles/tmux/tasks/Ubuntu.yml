@@ -1,5 +1,6 @@
 - block:
   - name: install tmux
+    become: yes
     apt:
       name: tmux
       state: latest

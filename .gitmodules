@@ -1,3 +1,6 @@
 [submodule "roles/ansible-role-cmake"]
 	path = roles/ansible-role-cmake
 	url = https://github.com/CardenB/ansible-role-cmake.git
+[submodule "roles/ansible-role-ripgrep"]
+	path = roles/ansible-role-ripgrep
+	url = https://github.com/CardenB/ansible-role-ripgrep.git

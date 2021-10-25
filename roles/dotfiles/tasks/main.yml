@@ -26,6 +26,17 @@
       block: |
         if [ -f ~/.carden_bashrc ]; then . ~/.carden_bashrc; fi
 
+  - name: Add local bin to path so we have access to our installations.
+    become: no
+    blockinfile:
+      path: ~/.bashrc
+      create: yes
+      marker: '# {mark} Add ~/.local/bin to $PATH'
+      insertafter: EOF
+      mode: 0664
+      block: |
+        export PATH=$PATH:~/.local/bin
+
   - name: Source bashrc
     include_role:
       name: dotfiles

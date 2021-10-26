@@ -4,6 +4,15 @@
       path: "{{ vim_dir }}"
     register: vim_dir_state
 
+  - name: Install vim c compiler dependencies
+    become: yes
+    apt:
+      pkg:
+        - build-essential
+        - g++-8
+        - gcc-8
+      state: latest
+
   - name: Abort if vim_dir already exists.
     become: no
     fail:
@@ -64,13 +73,13 @@
     become: no
     command:
       cmd: >
-        ./configure --with-features=huge --with-python3-command=python3.6 --enable-python3interp=yes --with-python3-config-dir="{{ python_config.stdout }}" --enable-multibyte --enable-rubyinterp=yes --enable-cscope --enable-perlinterp --enable-luainterp --enable-gui=gtk2 --prefix=/usr/local/
+        ./configure --with-features=huge --with-python3-command=python3.6 --enable-python3interp=yes --with-python3-config-dir="{{ python_config.stdout }}" --enable-multibyte --enable-rubyinterp=yes --enable-cscope --enable-perlinterp --enable-luainterp --enable-gui=gtk2 --prefix="{{ local_dir }}"
       chdir: "{{ vim_dir }}"
 
   - name: Configure vim install pt 3
     become: no
     environment:
-      VIMRUNTIMEDIR: /usr/local/share/vim/vim82
+      VIMRUNTIMEDIR: "{{ local_dir }}/share/vim/vim82"
     command:
       cmd: make
       chdir: "{{ vim_dir }}"

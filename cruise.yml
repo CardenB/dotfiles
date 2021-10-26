@@ -4,9 +4,6 @@
   vars:
     cruise: yes
     zoox: no
-  environment:
-    CC: gcc-8
-    CXX: g++-8
   roles:
     - {role: python, tags: [python, vim, ycm]}
     - {role: ansible-role-ripgrep, tags: [ripgrep]}

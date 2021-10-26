@@ -10,6 +10,9 @@
 
   - name: Install YouCompleteMe
     become: no
+    environment:
+      CC: gcc-8
+      CXX: g++-8
     command:
       chdir: "{{ ycm_dir }}"
       cmd: >-

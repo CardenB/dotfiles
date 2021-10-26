@@ -181,7 +181,12 @@ fi
 
 export EDITOR=vim
 # Needed to fix an issue with auth ssh over tmux on the host machine.
-SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock
+# Requires changes to ~/.tmux.conf as well.
+# More info here: https://blog.testdouble.com/posts/2016-11-18-reconciling-tmux-and-ssh-agent-forwarding/
+# TODO(carden): Put this in ~/.ssh/rc
+if test "$SSH_AUTH_SOCK" ; then
+  ln -sf $SSH_AUTH_SOCK ~/.ssh/ssh_auth_sock
+fi
 
 # Enables vi mode for the terminal.
 set -o vi;

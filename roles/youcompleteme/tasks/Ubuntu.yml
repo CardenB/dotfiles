@@ -1,11 +1,35 @@
 - block:
-  - name: Install YouCompleteMe dependencies
+  # TODO(carden): Figure out which system libraries need to be added for clangd to work properly.
+  #               It seems it does not currently work out of the box.
+  #               My only solution was here:
+  #                   https://www.codegrepper.com/code-examples/whatever/version+%60GLIBC_2.29%27+not+found
+  #               Current attempt to fix is below.
+  #
+  # Done as instructed by:
+  #                   https://www.codegrepper.com/code-examples/whatever/version+%60GLIBC_2.29%27+not+found
+  - name: Add an updated repository so that we can get the latest libstdc++6 for YCM's clangd.
+    become: yes
+    ansible.builtin.apt_repository:
+      repo: ppa:ubuntu-toolchain-r/test
+      state: present
+
+  - name: Install YouCompleteMe dependencies. Compiler toolchain for YCM's clangd.
     become: yes
     apt:
       pkg:
         - build-essential
         - g++-8
         - gcc-8
+      state: latest
+
+  # Done as instructed by:
+  #                   https://www.codegrepper.com/code-examples/whatever/version+%60GLIBC_2.29%27+not+found
+  - name: Install and/or upgrade libstdc++6 for YCM's clangd.
+    become: yes
+    apt:
+      upgrade: yes
+      pkg:
+        - libstdc++6
       state: latest
 
   - name: Install YouCompleteMe

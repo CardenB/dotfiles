@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-from yapf.yapflib import yapf_api
 import difflib
 import json
 import os
@@ -13,6 +12,7 @@ if USE_AUTOPEP8:
     import autopep8
 elif USE_YAPF:
     import yapf
+    from yapf.yapflib import yapf_api
 elif USE_BLACK:
     import black
 else:

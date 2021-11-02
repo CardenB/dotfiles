@@ -271,7 +271,11 @@ nnoremap ,W :call ConfirmCloseTab(0)<cr>
 nnoremap ,, :call SourceVimrc()<cr>
 
 
-" Map ctrl-I to clang formatting
+" Map formatting keybinds.
+" ,F for python when in python files.
+" F for c++ files.
+" have ,F and F as separate keybinds because autocmd FileType doesn't work so
+" well for some reason.
 "
 :function! FormatEntirePythonFile()
 :  let l:lines="all"

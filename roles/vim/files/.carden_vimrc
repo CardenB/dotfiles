@@ -182,6 +182,29 @@ set noro
 
 set showmode
 
+" Make it so that the cursor correctly changes between block and line on
+" insert. This should be default behavior
+set guicursor="n-v-c:block-Cursor/lCursor,ve:ver35-Cursor,o:hor50-Cursor,i-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor,sm:block-Cursor-blinkwait175-blinkoff150-blinkon175"
+
+" For some reason need to hardcode these escape codes in order to get the
+" cursor style to change correctly.
+" The number in the string matches the documented mapping below.
+" t_SI is for "start insert" and t_EI is for "end insert".
+" For more info, see :help termcap-cursor-shape
+" Source: https://github.com/tmux/tmux/issues/1557
+" CSI Ps SP q
+"           Set cursor style (DECSCUSR), VT520.
+"             Ps = 0  -> blinking block.
+"             Ps = 1  -> blinking block (default).
+"             Ps = 2  -> steady block.
+"             Ps = 3  -> blinking underline.
+"             Ps = 4  -> steady underline.
+"             Ps = 5  -> blinking bar (xterm).
+"             Ps = 6  -> steady bar (xterm).
+let &t_SI="\<Esc>[5 q"
+let &t_SR="\<Esc>[3 q"
+let &t_EI="\<Esc>[1 q"
+
 
 "------------------------------------------------------------
 " Indentation options 

@@ -543,7 +543,7 @@ vnoremap gb :GBrowse!<cr>
 " current file.
 " TODO(carden): Find a way to skip the "file has changed since editing" prompt
 "               that occurs on other files after launching Gblame.
-nmap gB :Gblame<cr>
+nmap gB :Git blame<cr>
 
 "------------------------------------------------------------}
 " Rhubarb Config

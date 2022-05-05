@@ -387,6 +387,14 @@ nnoremap  <C-L>  <C-W><C-L>
 " Add a keybind for redraw for whenever you need to refresh the screen.
 nnoremap ,r :redraw! <CR>
 
+" Map a function to autoformat JSON files.
+" We don't use filetype mappings, like for our .py and .cpp files, here
+" because often times we have json in non-traditional files.
+function! FormatJSON()
+:execute '%!python -m json.tool' | w
+endfunction
+nnoremap ,j :call FormatJSON()<cr>
+
 
 "------------------------------------------------------------}
 " Visual Elements

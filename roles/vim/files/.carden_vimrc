@@ -30,7 +30,13 @@ Plugin 'gmarik/Vundle.vim'          " required
 
 " Keep Plugin commands between vundle#begin/end
 " Plugin from git repo: https://github.com/Valloric/YouCompleteMe
+" We install this, even though we are using CoC now, and configure it to be
+" disabled, so that we can easily revisit it if CoC should fail.
 Plugin 'Valloric/YouCompleteMe'
+
+" Next gen autocomplete, intended to replace YCM.
+" https://github.com/neoclide/coc.nvim
+Plugin 'neoclide/coc.nvim'
 
 " Plugin for solarized colorscheme
 Plugin 'altercation/vim-colors-solarized'
@@ -330,30 +336,34 @@ endfunction
 nnoremap gp :call GotoProtoDef()<CR>
 
 function! SwitchSourceHeader()
-  " Get the current file extension. To see what this command is doing,
-  " see :help expand.
-  let l:cur_ext=expand("%:e")
-  " See if we have a source file (ending in .cpp or .cc).
-  if (expand ("%:e") == "cpp" || expand ("%:e") == "cc")
-    " %:t gives the basename with extension, :r trims the extension.
-    " Try searching for both .h and .hpp extensions, and open the first file
-    " that is found.
-    let l:h_path=expand("%:r") . ".h"
-    let l:hpp_path=expand("%:r") . ".hpp"
-    if filereadable(h_path)
-      find %:t:r.h
-    elseif filereadable(hpp_path)
-      find %:t:r.hpp
-    endif
-  else
-    let l:cpp_path=expand("%:r") . ".cpp"
-    let l:cc_path=expand("%:r") . ".cc"
-    if filereadable(cpp_path)
-      find %:t:r.cpp
-    elseif filereadable(cc_path)
-      find %:t:r.cc
-    endif
-  endif
+  " " Get the current file extension. To see what this command is doing,
+  " " see :help expand.
+  " let l:cur_ext=expand("%:e")
+  " " See if we have a source file (ending in .cpp or .cc).
+  " if (expand ("%:e") == "cpp" || expand ("%:e") == "cc")
+  "   " %:t gives the basename with extension, :r trims the extension.
+  "   " Try searching for both .h and .hpp extensions, and open the first file
+  "   " that is found.
+  "   let l:h_path=expand("%:r") . ".h"
+  "   let l:hpp_path=expand("%:r") . ".hpp"
+  "   if filereadable(h_path)
+  "     find %:t:r.h
+  "   elseif filereadable(hpp_path)
+  "     find %:t:r.hpp
+  "   endif
+  " else
+  "   let l:cpp_path=expand("%:r") . ".cpp"
+  "   let l:cc_path=expand("%:r") . ".cc"
+  "   if filereadable(cpp_path)
+  "     find %:t:r.cpp
+  "   elseif filereadable(cc_path)
+  "     find %:t:r.cc
+  "   endif
+  " endif
+
+  " Previous logic left for posterity. Here we use CoC to switch more
+  " intelligently.
+  execute 'edit' CocRequest('clangd', 'textDocument/switchSourceHeader', {'uri': 'file://'.expand("%:p")})
 endfunction
 
 " Switch between .h and .cpp files with ,s.
@@ -399,21 +409,25 @@ call togglebg#map("<F5>")
 "
 " Set this for compilation flags
 " let g:ycm_global_ycm_extra_conf='~/.vim/ycm_config/cpp/.ycm_extra_conf.py'
+" Configure YCM to be disabled, even though it is installed, while we use CoC.
+let g:loaded_youcompleteme = 1
 let g:ycm_global_ycm_extra_conf='~/.ycm_extra_conf.py'
 " Set this to make ycm a syntastic checker
 let g:ycm_register_as_syntastic_checker=0
 " Set this to use CTags
 let g:ycm_goto_buffer_command = 'horizontal-split'
-nnoremap <C-\> :YcmCompleter GoToDefinition<CR>
-nnoremap <bar> :YcmCompleter GoToInclude<CR>
-nnoremap ,<C-y> :YcmToggleLogs<CR>
-nnoremap ,<C-d> :YcmDebugInfo<CR>
-nnoremap ,<C-r> :YcmRestartServer<CR>
-nnoremap ,y :YcmCompleter FixIt<CR>
-nnoremap ,T :YcmCompleter GetTypeImprecise<CR>
-nnoremap ,t :YcmCompleter GetType<CR>
-nnoremap ,D :YcmCompleter GetDocImprecise<CR>
-nnoremap ,d :YcmCompleter GetDoc<CR>
+
+" Disable the YCM bindings while we use CoC
+" nnoremap <C-\> :YcmCompleter GoToDefinition<CR>
+" nnoremap <bar> :YcmCompleter GoToInclude<CR>
+" nnoremap ,<C-y> :YcmToggleLogs<CR>
+" nnoremap ,<C-d> :YcmDebugInfo<CR>
+" nnoremap ,<C-r> :YcmRestartServer<CR>
+" nnoremap ,d :YcmCompleter GetDoc<CR>
+" nnoremap ,y :YcmCompleter FixIt<CR>
+" nnoremap ,T :YcmCompleter GetTypeImprecise<CR>
+" nnoremap ,t :YcmCompleter GetType<CR>
+" nnoremap ,D :YcmCompleter GetDocImprecise<CR>
 
 "------------------------------------------------------------}
 " Syntastic Config
@@ -626,3 +640,36 @@ let g:qfenter_keymap = {}
 let g:qfenter_keymap.vopen = ['<C-v>']
 let g:qfenter_keymap.hopen = ['<C-x>']
 let g:qfenter_keymap.topen = ['<C-t>']
+
+"------------------------------------------------------------}
+" CoC Config
+"
+
+inoremap <silent><expr> <c-@> coc#refresh()
+" Map goto def bindings like YCM.
+nnoremap <C-\> :call CocActionAsync('jumpDefinition', 'vsplit')<CR>
+nnoremap <bar> :call CocActionAsync('jumpDeclaration', 'vsplit')<CR>
+" Map toggle doc bindings like YCM.
+nnoremap ,d :call CocActionAsync('doHover')<CR>
+" Binding to restart the Coc engine like YcmRestartServer
+nnoremap ,<C-r> :CocRestart<CR>
+" Binding to open the Coc Logs like YcmToggleLogs.
+" Used to debug why CoC is failing.
+nnoremap ,<C-y> :CocOpenLog<CR>
+" Binding to open the Coc Info like YcmDebugInfo.
+" Used to debug why clang config is bad.
+nnoremap ,<C-d> :CocInfo<CR>
+" Binding to open the Coc Config like ycm_extra_conf.
+" Used to debug why clang config is bad.
+nnoremap ,<C-s> :CocConfig<CR>
+" use <tab> for trigger completion and navigate to the next complete item
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~ '\s'
+endfunction
+
+" Need to do this so that tab complete actually works
+inoremap <silent><expr> <Tab>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<Tab>" :
+      \ coc#refresh()

@@ -64,7 +64,14 @@ def commit_delta_by_branch(cur_branch, repo):
                                        repo)
 
 
-def create_branch_str(bname, active_branch, depth, parent_bname='', repo=None):
+def replace_colored(string, *args, **kwargs):
+    return string
+
+
+def create_branch_str(bname, active_branch, depth, parent_bname='', repo=None, no_color=False):
+    color_fn = colored
+    if no_color:
+        color_fn = replace_colored
     # Create a string with whitespace representing depth.
     tabstr = ''.join(['  '] * depth)
     if depth == 0:
@@ -80,17 +87,17 @@ def create_branch_str(bname, active_branch, depth, parent_bname='', repo=None):
                                                      repo)
         branch_str += '  '
         if parent_ahead:
-            parent_ahead_str = colored('-{}'.format(str(parent_ahead)), 'red')
+            parent_ahead_str = color_fn('-{}'.format(str(parent_ahead)), 'red')
         elif parent_ahead == 0:
             parent_ahead_str = '-{}'.format(str(parent_ahead))
         if cur_ahead:
-            cur_ahead_str = colored('+{}'.format(str(cur_ahead)), 'green')
+            cur_ahead_str = color_fn('+{}'.format(str(cur_ahead)), 'green')
         elif cur_ahead == 0:
             cur_ahead_str = '-{}'.format(str(cur_ahead))
 
         if cur_ahead is None or parent_ahead is None:
             branch_str += "(Upstream Branch Not Found)"
-            branch_str = colored(branch_str, 'red')
+            branch_str = color_fn(branch_str, 'red')
         else:
             branch_str += '({}, {})'.format(parent_ahead_str, cur_ahead_str)
 
@@ -99,7 +106,7 @@ def create_branch_str(bname, active_branch, depth, parent_bname='', repo=None):
     active_bname = branch_name(active_branch)
     if active_bname is not None and bname == active_bname:
         branch_str += ' *(active branch)'
-        branch_str = colored(branch_str, 'green')
+        branch_str = color_fn(branch_str, 'green')
     return branch_str
 
 
@@ -131,7 +138,7 @@ def refresh_branch(branch, repo):
             colored(str(e), 'red')))
 
 
-def print_tree(dag, current_branch_name, depth, repo, cascade=False):
+def print_tree(dag, current_branch_name, depth, repo, cascade=False, color=True):
     """
     Prints the git flow dependency tree recursively.
     Ex:
@@ -157,13 +164,14 @@ def print_tree(dag, current_branch_name, depth, repo, cascade=False):
     if current_branch_name not in dag:
         return True
     if depth == 0:
-        print(create_branch_str(current_branch_name, active_branch, depth))
+        print(create_branch_str(current_branch_name, active_branch, depth, no_color=not color))
         return print_tree(
             dag,
             current_branch_name,
             depth + 1,
             repo,
-            cascade=cascade)
+            cascade=cascade,
+            color=color)
     # Recurively print branches in the flow dag.
     for branch in dag[current_branch_name]:
         bname = branch_name(branch)
@@ -173,7 +181,8 @@ def print_tree(dag, current_branch_name, depth, repo, cascade=False):
                               active_branch,
                               depth,
                               branch_name(branch.tracking_branch()),
-                              repo))
+                              repo,
+                              no_color=not color))
 
         # Perform the cascaded rebase if specified.
         if (cascade):
@@ -194,7 +203,7 @@ def print_tree(dag, current_branch_name, depth, repo, cascade=False):
                 print("Continuing to next subtree...")
                 repo.git.rebase(abort=True)
                 continue
-        if not print_tree(dag, bname, depth + 1, repo, cascade=cascade):
+        if not print_tree(dag, bname, depth + 1, repo, cascade=cascade, color=color):
             return False
     return True
 
@@ -224,7 +233,7 @@ def build_git_dag(r):
     return dag, roots
 
 
-def print_dag(dag, roots, repo, cascade):
+def print_dag(dag, roots, repo, cascade, color=True):
     # Begin traversing the tree from the top level branches.
     for root_branch_name in roots:
         if not print_tree(
@@ -232,8 +241,10 @@ def print_dag(dag, roots, repo, cascade):
                 root_branch_name,
                 depth=0,
                 repo=repo,
-                cascade=cascade):
+                cascade=cascade,
+                color=color):
             return
+
 
 def checkout(branch_name, repo, fail=True):
     """
@@ -309,14 +320,14 @@ def main(argv=sys.argv[1:]):
 
     if args.cascade:
         roots = [active_branch_name]
-    print_dag(dag, roots, repo, args.cascade)
+    print_dag(dag, roots, repo, args.cascade, color=args.color)
     # If performing a cascade, print out status again.
     if args.cascade:
         # If cascaded, return to the original branch.
         repo.git.checkout(initial_active_branch)
 
         print('Status after cascade:')
-        print_dag(dag, roots, repo, False)
+        print_dag(dag, roots, repo, False, color=args.color)
 
 
 if __name__ == '__main__':

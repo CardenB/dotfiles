@@ -52,7 +52,7 @@ def commit_delta_by_branch_name(cur_branch_name, parent_branch_name, repo):
         parent_divergence, cur_branch_divergence = [
                 int(count.strip()) for count in delta_str.split()]
         return parent_divergence, cur_branch_divergence
-    except Exception as e:
+    except Exception:
         return None, None
 
 
@@ -266,6 +266,19 @@ def checkout(branch_name, repo, fail=True):
     return True
 
 
+def find_git_dir():
+    """
+    Finds the git directory no matter where your current working directory is.
+    """
+    # Use `--show-toplevel` instead of `--git-dir` here because it is a more
+    # robust solution.
+    cmd = ['git', 'rev-parse', '--show-toplevel']
+    g = git.Git()
+    # We join with .git instead of doing `--git-dir` in our cmd because this
+    # works with worktrees, while `--git-dir` did not work with worktrees in my
+    # experience. Worst case, both work.
+    return os.path.join(g.execute(cmd), '.git')
+
 
 def parse_args(argv):
     parser = argparse.ArgumentParser(description=__doc__)
@@ -286,18 +299,21 @@ def parse_args(argv):
         default=False,
         action='store_true',
         help="Updates the specified branch with latest origin.")
+    parser.add_argument(
+        '--no-color',
+        default=True,
+        dest='color',
+        action='store_false',
+        help="Updates the specified branch with latest origin.")
     return parser.parse_args(argv)
 
 
 def main(argv=sys.argv[1:]):
     args = parse_args(argv)
-    cwd = os.getcwd()
-    git_dir = os.path.join(cwd, '.git')
-    if not (os.path.exists(git_dir) and os.path.isdir(git_dir)):
+    git_dir = find_git_dir()
+    if not (os.path.exists(git_dir)):
         raise DagParseException("Must be in git directory!")
-    cwd = os.path.expanduser(os.getcwd())
-    repo_dir = cwd
-    repo = git.Repo(repo_dir)
+    repo = git.Repo(os.path.dirname(git_dir))
     dag, roots = build_git_dag(repo)
 
     # By default, start with the currently checked out branch.

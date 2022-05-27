@@ -1,8 +1,49 @@
 - block:
-  - name: install tmux
+  - name: apt installing Ubuntu/Debian dependencies
     become: yes
     apt:
-      name: tmux
-      state: latest
+      name:
+        - automake
+        - libevent-dev
+        # Other packages that may be required.
+        # - bison
+        # - gcc
+        # - libncurses5-dev
+        # - make
+        # - pkg-config
+      state: present
     tags: tmux
 
+  - name: Git cloning tmux 3.2 source
+    git:
+      repo: https://github.com/tmux/tmux.git
+      dest: "{{ local_src }}/tmux"
+      version: 3.2
+    tags: tmux
+
+
+  - name: Running autogen.sh
+    command: /bin/sh autogen.sh
+    args:
+      chdir: "{{ local_src }}/tmux"
+      creates: "{{ local_src }}/tmux/configure"
+    tags: tmux
+
+  - name: Running ./configure
+    command: "./configure --prefix={{ local_dir }}"
+    args:
+      chdir: "{{ local_src }}/tmux"
+      creates: Makefile
+    tags: tmux
+
+  - name: Installing via make install
+    make:
+      chdir: "{{ local_src }}/tmux"
+      target: install
+    tags: tmux
+
+  - name: Cleaning up
+    file:
+      path: "{{ local_src }}/tmux"
+      state: absent
+    tags: tmux

@@ -28,6 +28,10 @@ call vundle#begin()                 " required
 " let Vundle manage Vundle, required
 Plugin 'gmarik/Vundle.vim'          " required
 
+" DoGe is a (Do)cumentation (Ge)nerator which will generate a proper
+" documentation skeleton based on certain expressions (mainly functions).
+Plugin 'kkoomen/vim-doge'
+
 " Keep Plugin commands between vundle#begin/end
 " Plugin from git repo: https://github.com/Valloric/YouCompleteMe
 " We install this, even though we are using CoC now, and configure it to be
@@ -681,3 +685,18 @@ inoremap <silent><expr> <Tab>
       \ pumvisible() ? "\<C-n>" :
       \ <SID>check_back_space() ? "\<Tab>" :
       \ coc#refresh()
+
+"------------------------------------------------------------}
+" Doge Config
+"
+" DoGe is a (Do)cumentation (Ge)nerator which will generate a proper
+" documentation skeleton based on certain expressions (mainly functions).
+" Simply put your cursor on a function, press <Leader>d, jump quickly through
+" TODO items using <Tab> and <S-Tab> to quickly add descriptions and go on
+" coding!
+
+" Use numpy formatted docstring convention.
+let g:doge_doc_standard_python = 'numpy'
+" Disable the tab jumping for doge. This allows for using tab auto complete and
+" disables auto insert mode.
+let g:doge_comment_interactive = 0

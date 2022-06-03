@@ -18,6 +18,7 @@
         - black
         - ipdb
         - ipython
+        - isort
       state: latest
       extra_args: --user
     tags: [python]

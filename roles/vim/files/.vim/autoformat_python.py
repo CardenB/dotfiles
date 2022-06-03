@@ -1,22 +1,59 @@
 #!/usr/bin/env python3
+
+# System imports
 import difflib
-import json
-import os
-import subprocess
+
+# Third-party imports
+import isort
 import vim
+from isort import Config as IsortConfig
+from isort.sections import FIRSTPARTY, FUTURE, LOCALFOLDER, STDLIB, THIRDPARTY
+from isort.settings import IMPORT_HEADING_PREFIX
 
 USE_AUTOPEP8 = False
 USE_YAPF = False
 USE_BLACK = True
 if USE_AUTOPEP8:
+    # Third-party imports
     import autopep8
 elif USE_YAPF:
+    # Third-party imports
     import yapf
     from yapf.yapflib import yapf_api
 elif USE_BLACK:
+    # Third-party imports
     import black
 else:
     print("No formatter selected. Exiting.")
+
+IMPORT_HEADINGS = {
+    FUTURE: "Future imports",
+    STDLIB: "System imports",
+    THIRDPARTY: "Third-party imports",
+    "ROS": "ROS imports",
+    FIRSTPARTY: "Cruise imports",
+    LOCALFOLDER: "Package imports",
+}
+IMPORT_SECTIONS = tuple([heading.upper() for heading in IMPORT_HEADINGS.keys()])
+ISORT_CONFIG_OVERRIDES = dict(
+    profile="black",
+    quiet=True,
+    line_length=99,
+    combine_as_imports=True,
+    use_parentheses=True,
+    include_trailing_comma=True,
+    multi_line_output=3,
+    # Skip __init__.py because import ordering there are senstive sometimes
+    extend_skip="__init__.py",
+    filter_files=True,
+    sections=IMPORT_SECTIONS,
+    format_error="{{error}}: {{message}} If you think this is a false-alarm, use # isort: skip to disable this.",
+)
+# Add the prefix and update config overrides to support the heading mapping.
+IMPORT_HEADINGS = {
+    f"{IMPORT_HEADING_PREFIX}{key.lower()}": val for key, val in IMPORT_HEADINGS.items()
+}
+ISORT_CONFIG_OVERRIDES.update(IMPORT_HEADINGS)
 
 
 def main():
@@ -36,10 +73,10 @@ def main():
         start, end = None, None
     else:
         # Determine range to format.
-        lines = [int(vim.current.range.start), int(vim.current.range.end+1)]
+        lines = [int(vim.current.range.start), int(vim.current.range.end + 1)]
         start, end = lines[0], lines[1]
         assert not USE_BLACK, "Black only formats the entire file at once, not specific lines."
-    text = '\n'.join(buf)
+    text = "\n".join(buf)
     yapf_options = {
         "unformatted_source": text,
         "style_config": {
@@ -67,16 +104,19 @@ def main():
     if USE_BLACK:
         # Black does not format specific lines unfortunately.
         fixed_code = black.format_str(text, mode=black.Mode(**black_options))
+    fixed_code = isort.api.sort_code_string(
+        code=fixed_code, config=IsortConfig(**ISORT_CONFIG_OVERRIDES)
+    )
 
-    assert fixed_code, 'No output from autoformatter!'
+    assert fixed_code, "No output from autoformatter!"
 
-    line_arr = fixed_code.split('\n')[:-1]
+    line_arr = fixed_code.split("\n")[:-1]
     # Execute the sequence of changes.
     sequence = difflib.SequenceMatcher(None, vim.current.buffer, line_arr)
     for op in reversed(sequence.get_opcodes()):
-        if op[0] is not 'equal':
-            vim.current.buffer[op[1]:op[2]] = line_arr[op[3]:op[4]]
+        if op[0] is not "equal":
+            vim.current.buffer[op[1] : op[2]] = line_arr[op[3] : op[4]]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

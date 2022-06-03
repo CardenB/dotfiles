@@ -5,7 +5,7 @@
     cruise: yes
     zoox: no
   roles:
-    - {role: python, tags: [python, vim, ycm]}
+    - {role: python, tags: [python, vim]}
     - {role: ansible-role-ripgrep, tags: [ripgrep]}
     - {role: packages, tags: [packages]}
     - {role: tmux, tags: [tmux]}

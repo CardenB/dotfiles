@@ -35,8 +35,8 @@
     become: yes
     apt:
       pkg:
-        - python3.6
-        - python3.6-dev
+        - python3.7
+        - python3.7-dev
       state: latest
 
   - name: Install checkinstall to track the package install
@@ -57,10 +57,10 @@
       repo: https://github.com/vim/vim.git
       dest: "{{ vim_dir }}"
 
-  - name: Store python3.6 config for use in vim config.
+  - name: Store python3.7 config for use in vim config.
     become: no
     command:
-      cmd: python3.6-config --configdir
+      cmd: python3.7-config --configdir
     register: python_config
 
   - name: Configure vim install pt 1
@@ -73,7 +73,7 @@
     become: no
     command:
       cmd: >
-        ./configure --with-features=huge --with-python3-command=python3.6 --enable-python3interp=yes --with-python3-config-dir="{{ python_config.stdout }}" --enable-multibyte --enable-rubyinterp=yes --enable-cscope --enable-perlinterp --enable-luainterp --enable-gui=gtk2 --prefix="{{ local_dir }}"
+        ./configure --with-features=huge --with-python3-command=python3.7 --enable-python3interp=yes --with-python3-config-dir="{{ python_config.stdout }}" --enable-multibyte --enable-rubyinterp=yes --enable-cscope --enable-perlinterp --enable-luainterp --enable-gui=gtk2 --prefix="{{ local_dir }}"
       chdir: "{{ vim_dir }}"
 
   - name: Configure vim install pt 3

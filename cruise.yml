@@ -14,5 +14,6 @@
     - {role: vim, tags: [vim]}
       # ycm requires cmake version 3.14 or higher now.
     - {role: ansible-role-cmake, tags: [cmake, vim, ycm], cmake_version: 3.14}
-    - {role: youcompleteme, tags: [vim, ycm], cmake_version: 3.14}
+      # Remove YCM from cruise setup in favor of CoC.
+      # - {role: youcompleteme, tags: [vim, ycm], cmake_version: 3.14}
     - {role: dotfiles, tags: [dotfiles]}

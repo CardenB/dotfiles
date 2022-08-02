@@ -62,6 +62,7 @@ fi
 
 # Function to get info about what virtualenv you're currently in so you can add to PS1.
 function virtualenv_info(){
+    venv=''
     # Get Virtual Env
     if [[ -n "$VIRTUAL_ENV" ]]; then
         # Strip out the path and just leave the env name
@@ -157,6 +158,12 @@ fi
 # Setup terminal colors in tmux
 alias tmux="TERM=screen-256color-bce tmux"
 
+# Command to fix SSH_AUTH_SOCK update issues within tmux.
+# Source: https://stackoverflow.com/questions/21378569/how-to-auto-update-ssh-agent-environment-variables-when-attaching-to-existing-tm
+fixssh() {
+  eval $(tmux show-env -s |grep '^SSH_')
+}
+
 # Checks if a tmux session is active. If not, starts one named 'carden'.
 # If already exists, then it attaches to 'carden'
 if [ ! $TMUX ]; then
@@ -213,3 +220,14 @@ alias docker-prune-old="docker image prune -a --force --filter 'until=168h'"
 tmux_ssh() {
   ssh -t "$1" 'tmux -CC new -A -s carden';
 }
+
+# Finds subdirectories older than the provided number of days.
+# ctime for directory is with files are added or removed from the directory.
+# https://stackoverflow.com/questions/13868821/shell-script-to-delete-directories-older-than-n-days
+# Add `| xargs rm -rf` to delete them.
+find_old_dir () {
+    parent_dir=$1
+    num_days=$2
+    find "${parent_dir}"/* -type d -ctime +${num_days}
+}
+alias find-old-dir=find_old_dir

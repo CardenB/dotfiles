@@ -59,6 +59,43 @@ if [ -n "$force_color_prompt" ]; then
     fi
 fi
 
+# get_user() {
+#   if [ "$USER" = "" ]; then
+#     USER="carden.bagwell";
+#   fi
+# }
+# gcloud_auth_with_timeout() {
+#     AUTH_DESCRIPTION="$(timeout -k 9 2 gcloud auth describe $USER@getcruise.com </dev/null 2>&1)"
+#     echo "${AUTH_DESCRIPTION}" | grep -iq ERROR;
+#     echo $?
+#     return $? 
+# }
+
+# check_auth_status() {
+#   get_user;
+# 
+#   
+#   # If we get return code 0, we found ERROR, which means bad auth status, return 0.
+#   if [ "$(gcloud_auth_with_timeout)" = 0 ];
+#   then
+#     return 0
+#   else
+#     return 1
+#   fi
+# }
+
+# auth_status() {
+# # \[\033[1;32m\]\u:\[\033[1;34m\] \W\[\033[1;34m\] \$\[\033[0m\]
+#   GREEN="\[\e[32m\]"
+#   RED="\[\e[31m\]"
+#   SUFFIX="\[\e[0m\]"
+#   if $(check_auth_status);
+#   then
+#     echo "${RED}NEED_AUTH${SUFFIX}"
+#   else
+#     echo "${GREEN}AUTH${SUFFIX}"
+#   fi
+# }
 
 # Function to get info about what virtualenv you're currently in so you can add to PS1.
 function virtualenv_info(){
@@ -85,14 +122,16 @@ export PS1="\u@\h:\w\$ "
 # Function to handle formatting of PS1.
 # TODO(carden): Debug the escape sequences here.
 ps1_stuff() {
+  export PS1="\u@\h:\w\$ "
+#   auth_str="$(auth_status), "
   # Handle color_prompt logic from before in PS1.
   # TODO(carden): Determine the source for this and ensure it's not causing issues.
   if [ "$color_prompt" = yes ]; then
       # PS1=$auth_str", "'${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
-      PS1=$auth_str", "'${debian_chroot:+($debian_chroot)}\u@\h:\w\\$'
+      PS1="'${debian_chroot:+($debian_chroot)}\u@\h:\w\\$'
   else
       # PS1=$auth_str", "'${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
-      PS1=$auth_str", "'${debian_chroot:+($debian_chroot)}\u@\h:\w\\$ '
+      PS1="'${debian_chroot:+($debian_chroot)}\u@\h:\w\\$ '
   fi
   unset color_prompt force_color_prompt
 
@@ -188,12 +227,14 @@ fi
 
 export EDITOR=vim
 # Needed to fix an issue with auth ssh over tmux on the host machine.
-# Requires changes to ~/.tmux.conf as well.
-# More info here: https://blog.testdouble.com/posts/2016-11-18-reconciling-tmux-and-ssh-agent-forwarding/
-# TODO(carden): Put this in ~/.ssh/rc
-if test "$SSH_AUTH_SOCK" ; then
-  ln -sf $SSH_AUTH_SOCK ~/.ssh/ssh_auth_sock
-fi
+# # Requires changes to ~/.tmux.conf as well.
+# # More info here: https://blog.testdouble.com/posts/2016-11-18-reconciling-tmux-and-ssh-agent-forwarding/
+# # TODO(carden): Put this in ~/.ssh/rc
+# if test "$SSH_AUTH_SOCK" ; then
+#   ln -sf $SSH_AUTH_SOCK ~/.ssh/ssh_auth_sock
+# fi
+# Trying to simply have this config to handle auth sock fixes.
+SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock
 
 # Enables vi mode for the terminal.
 set -o vi;

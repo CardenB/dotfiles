@@ -5,10 +5,10 @@
       name:
         - automake
         - libevent-dev
+        - ncurses-dev
         # Other packages that may be required.
         # - bison
         # - gcc
-        # - libncurses5-dev
         # - make
         # - pkg-config
       state: present

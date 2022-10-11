@@ -15,7 +15,7 @@
 [fetch]
   prune = true
 [pull]
-  rebase = preserve
+  rebase = merges
 [branch]
   autoSetupMerge = always
 [alias]

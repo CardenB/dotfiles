@@ -79,7 +79,7 @@
   - name: Configure vim install pt 3
     become: no
     environment:
-      VIMRUNTIMEDIR: "{{ local_dir }}/share/vim/vim82"
+      VIMRUNTIMEDIR: "{{ local_dir }}/share/vim/vim90"
     command:
       cmd: make
       chdir: "{{ vim_dir }}"

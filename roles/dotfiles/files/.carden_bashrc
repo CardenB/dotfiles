@@ -209,9 +209,6 @@ if [ ! $TMUX ]; then
     tmux new-session -A -s carden
 fi
 
-# Enables vi mode for the terminal.
-set -o vi
-
 alias gitflow="python3 ~/.local/bin/gitflow"
 
 

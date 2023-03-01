@@ -209,6 +209,8 @@ if [ ! $TMUX ]; then
     tmux new-session -A -s carden
 fi
 
+# Enables vi mode for the terminal.
+set -o vi
 
 alias gitflow="python3 ~/.local/bin/gitflow"
 
@@ -256,12 +258,6 @@ alias server="python3 -m http.server $1"
 # https://stackoverflow.com/questions/50737059/how-to-remove-docker-images-which-created-7-days-ago-automatically
 alias docker-prune-old="docker image prune -a --force --filter 'until=168h'"
 
-# Allows for tmux-ing to a server with iterm2 integration.
-# Ex: tmux_ssh personal-desktop # Where personal-desktop is an ssh alias.
-tmux_ssh() {
-  ssh -t "$1" 'tmux -CC new -A -s carden';
-}
-
 # Finds subdirectories older than the provided number of days.
 # ctime for directory is with files are added or removed from the directory.
 # https://stackoverflow.com/questions/13868821/shell-script-to-delete-directories-older-than-n-days
@@ -272,3 +268,17 @@ find_old_dir () {
     find "${parent_dir}"/* -type d -ctime +${num_days}
 }
 alias find-old-dir=find_old_dir
+
+# Allows for tmux-ing to a server with iterm2 integration.
+# Ex: tmux_ssh personal-desktop # Where personal-desktop is an ssh alias.
+tmux_ssh() {
+  # ssh "$1" -t '/home/carden.bagwell/.local/bin/tmux -CC new -A -s carden -d';
+  ssh "$1" -t 'tmux -CC new -A -s carden -d';
+}
+
+tmux_ssh_no_gui() {
+  ssh "$1" -t 'tmux -L new -A -s carden -d';
+}
+poppy_tmux() {
+  poppy exec "$1" -- tmux -CC new -A -L -s carden -d;
+}

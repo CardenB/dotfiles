@@ -5,7 +5,7 @@
   - name: Set up vundle plugin manager
     become: no
     git:
-      repo: https://github.com/VundleVim/Vundle.vim.git
+      repo: git@github.com:VundleVim/Vundle.vim.git
       dest: "{{ home_dir }}/.vim/bundle/Vundle.vim"
 
   # Configure vimrc

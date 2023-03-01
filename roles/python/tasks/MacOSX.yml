@@ -21,12 +21,12 @@
       name: dotfiles
       tasks_from: source_bashrc
 
-  - name: Check if python 3.6.9 is already installed
+  - name: Check if python 3.6.15 is already installed
     become: no
     stat:
-      path: "~/.pyenv/versions/3.6.9"
-    register: pyenv369_state
+      path: "~/.pyenv/versions/3.6.15"
+    register: pyenv3615_state
 
-  - name: Install python 3.6.9
-    command: pyenv install 3.6.9
-    when: not (pyenv369_state.stat.exists)
+  - name: Install python 3.6.15
+    command: pyenv install 3.6.15
+    when: not (pyenv3615_state.stat.exists)

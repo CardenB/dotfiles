@@ -3,3 +3,9 @@
   homebrew:
       name: vim
       state: latest
+
+- name: Install yarn for MacOS, needed for CoC.nvim
+  become: no
+  homebrew:
+      name: yarn
+      state: latest

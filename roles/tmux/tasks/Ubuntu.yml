@@ -6,24 +6,24 @@
         - automake
         - libevent-dev
         - ncurses-dev
+        - pkg-config
         # Other packages that may be required.
         # - bison
         # - gcc
         # - make
-        # - pkg-config
       state: present
     tags: tmux
 
-  - name: Git cloning tmux 3.2 source
+  - name: Git cloning tmux 3.3a source
     git:
       repo: https://github.com/tmux/tmux.git
       dest: "{{ local_src }}/tmux"
-      version: 3.2
+      version: 3.3a
     tags: tmux
 
 
   - name: Running autogen.sh
-    command: /bin/sh autogen.sh
+    command: ./autogen.sh
     args:
       chdir: "{{ local_src }}/tmux"
       creates: "{{ local_src }}/tmux/configure"

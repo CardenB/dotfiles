@@ -1,10 +1,10 @@
 - block:
-  - name: Install python3.7 packages
+  - name: Install python3.9 packages
     become: yes
     apt:
       pkg:
-        - python3.7
-        - python3.7-dev
+        - python3.9
+        - python3.9-dev
         - python3-pip
       state: latest
     tags: python

@@ -7,6 +7,7 @@
         - libevent-dev
         - ncurses-dev
         - pkg-config
+        - bat
         # Other packages that may be required.
         # - bison
         # - gcc

@@ -279,3 +279,18 @@ tmux_ssh_no_gui() {
 poppy_tmux() {
   poppy exec "$1" -- tmux -CC new -A -L -s carden -d;
 }
+
+# Creates an FZF console for all files containing keyword.
+function frg {
+    result=`rg --ignore-case --color=always --line-number --no-heading "$@" |
+      fzf --ansi \
+          --color 'hl:-1:underline,hl+:-1:underline:reverse' \
+          --delimiter ':' \
+          --preview "batcat --color=always {1} --theme='Solarized (light)' --highlight-line {2}" \
+          --preview-window 'up,60%,border-bottom,+{2}+3/3,~3'`
+    file="${result%%:*}"
+    linenumber=`echo "${result}" | cut -d: -f2`
+    if [ ! -z "$file" ]; then
+            $EDITOR +"${linenumber}" "$file"
+    fi
+  }

@@ -8,5 +8,11 @@
       repo: git@github.com:VundleVim/Vundle.vim.git
       dest: "{{ home_dir }}/.vim/bundle/Vundle.vim"
 
+  - name: Set up copilot vim plugin outside of vundle.
+    become: no
+    git:
+      repo: git@github.com:github/copilot.vim.git
+      dest: "{{ home_dir }}/.vim/pack/github/start/copilot.vim"
+
   # Configure vimrc
   - include: "vimrc.yml"

@@ -1,0 +1,8 @@
+{
+  "suggest.noselect": true,
+  "inlayHint.display": false,
+  "floatFactory.floatConfig": {
+      "border": true,
+      "rounded": true
+  },
+}

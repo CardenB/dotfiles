@@ -172,6 +172,12 @@ set nostartofline
 set ruler
 " Always display the status line, even if only one window is displayed
 set laststatus=2
+" Clear the statusline
+set statusline=
+" Add status of vim session to statusline.
+" set statusline+=%{ObsessionStatus()}
+" Add default statusline from examples in :help statusline
+set statusline+=%<%f\ %h%m%r%=%-14.(%l,%c%V%)\ %P
 " Instead of failing a command because of unsaved changes, instead raise a
 " dialogue asking if you wish to save changed files.
 set confirm
@@ -315,6 +321,7 @@ nnoremap ,, :call SourceVimrc()<cr>
 " have ,F and F as separate keybinds because autocmd FileType doesn't work so
 " well for some reason.
 "
+
 :function! FormatEntirePythonFile()
 :  let l:lines="all"
 :  py3f ~/.vim/autoformat_python.py

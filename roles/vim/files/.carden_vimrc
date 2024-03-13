@@ -36,7 +36,7 @@ Plugin 'kkoomen/vim-doge'
 " Plugin from git repo: https://github.com/Valloric/YouCompleteMe
 " We install this, even though we are using CoC now, and configure it to be
 " disabled, so that we can easily revisit it if CoC should fail.
-Plugin 'Valloric/YouCompleteMe'
+" Plugin 'Valloric/YouCompleteMe'
 
 " Next gen autocomplete, intended to replace YCM.
 " https://github.com/neoclide/coc.nvim

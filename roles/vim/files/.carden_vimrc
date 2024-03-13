@@ -420,38 +420,38 @@ set colorcolumn=120
 " Setup solorized color scheme
 syntax enable
 set background=dark
-" Force terminal colors to 16.
-set t_Co=16
-let g:solarized_termtrans = 1
-let g:solarized_termcolors=16
+" " Force terminal colors to 16.
+" set t_Co=16
+" let g:solarized_termtrans = 1
+" let g:solarized_termcolors=16
 colorscheme solarized
 " Set toggle color command (between nighttime and daytime).
 call togglebg#map("<F5>")
 
-"------------------------------------------------------------}
-" YouCompleteMe Config
-"
-" Set this for compilation flags
-" let g:ycm_global_ycm_extra_conf='~/.vim/ycm_config/cpp/.ycm_extra_conf.py'
-" Configure YCM to be disabled, even though it is installed, while we use CoC.
-let g:loaded_youcompleteme = 1
-let g:ycm_global_ycm_extra_conf='~/.ycm_extra_conf.py'
-" Set this to make ycm a syntastic checker
-let g:ycm_register_as_syntastic_checker=0
-" Set this to use CTags
-let g:ycm_goto_buffer_command = 'horizontal-split'
-
-" Disable the YCM bindings while we use CoC
-" nnoremap <C-\> :YcmCompleter GoToDefinition<CR>
-" nnoremap <bar> :YcmCompleter GoToInclude<CR>
-" nnoremap ,<C-y> :YcmToggleLogs<CR>
-" nnoremap ,<C-d> :YcmDebugInfo<CR>
-" nnoremap ,<C-r> :YcmRestartServer<CR>
-" nnoremap ,d :YcmCompleter GetDoc<CR>
-" nnoremap ,y :YcmCompleter FixIt<CR>
-" nnoremap ,T :YcmCompleter GetTypeImprecise<CR>
-" nnoremap ,t :YcmCompleter GetType<CR>
-" nnoremap ,D :YcmCompleter GetDocImprecise<CR>
+" "------------------------------------------------------------}
+" " YouCompleteMe Config
+" "
+" " Set this for compilation flags
+" " let g:ycm_global_ycm_extra_conf='~/.vim/ycm_config/cpp/.ycm_extra_conf.py'
+" " Configure YCM to be disabled, even though it is installed, while we use CoC.
+" let g:loaded_youcompleteme = 1
+" let g:ycm_global_ycm_extra_conf='~/.ycm_extra_conf.py'
+" " Set this to make ycm a syntastic checker
+" let g:ycm_register_as_syntastic_checker=0
+" " Set this to use CTags
+" let g:ycm_goto_buffer_command = 'horizontal-split'
+" 
+" " Disable the YCM bindings while we use CoC
+" " nnoremap <C-\> :YcmCompleter GoToDefinition<CR>
+" " nnoremap <bar> :YcmCompleter GoToInclude<CR>
+" " nnoremap ,<C-y> :YcmToggleLogs<CR>
+" " nnoremap ,<C-d> :YcmDebugInfo<CR>
+" " nnoremap ,<C-r> :YcmRestartServer<CR>
+" " nnoremap ,d :YcmCompleter GetDoc<CR>
+" " nnoremap ,y :YcmCompleter FixIt<CR>
+" " nnoremap ,T :YcmCompleter GetTypeImprecise<CR>
+" " nnoremap ,t :YcmCompleter GetType<CR>
+" " nnoremap ,D :YcmCompleter GetDocImprecise<CR>
 
 "------------------------------------------------------------}
 " Syntastic Config

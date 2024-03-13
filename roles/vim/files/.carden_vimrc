@@ -796,6 +796,8 @@ let g:doge_comment_interactive = 0
 " https://github.com/github/copilot.vim
 " Suggestions are displayed inline and can be accepted by pressing the tab
 " key. See :help copilot for more information.
+" NOTE: May need to install manually (instead of vundle) here:
+" https://github.com/github/copilot.vim?tab=readme-ov-file#getting-started
 
 nnoremap ,cp :Copilot panel<CR>
 nnoremap ,cs :Copilot status<CR>

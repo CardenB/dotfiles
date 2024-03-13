@@ -19,6 +19,11 @@ set encoding=utf-8
 " set for vundle
 filetype off                        " required
 
+" This option makes Vundle use `git` instead of `https` when building
+" absolute URIs. For example:
+"   Plugin 'sjl/gundo.vim' -> git@github.com:sjl/gundo.git
+" let g:vundle_default_git_proto = 'https'
+
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim    " required
 call vundle#begin()                 " required

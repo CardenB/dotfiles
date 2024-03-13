@@ -5,7 +5,7 @@
 "              If you're a more advanced user, building your own .vimrc based
 "              on this file is still a good idea.
 "------------------------------------------------------------
-" Features 
+" Features
 "
 " These options and commands enable some very useful features in Vim, that
 " no user should have to live without.
@@ -97,12 +97,12 @@ filetype indent plugin on           " required
 " :PluginSearch foo - searches for foo; append `!` to refresh local cache
 " :PluginClean      - confirms removal of unused plugins; append `!` to
 "                     auto-approve removal
-" 
+"
 " see :h vundle for more details or wiki for FAQ
 " Put your non-Plugin stuff after this line
 
 "------------------------------------------------------------
-" Must have options 
+" Must have options
 "
 " These are highly recommended options.
 
@@ -148,7 +148,7 @@ set mouse=a
 
 
 "------------------------------------------------------------
-" Usability options 
+" Usability options
 "
 " These are options that users frequently set in their .vimrc. Some of them
 " change Vim's behaviour in ways which deviate from the true Vi way, but
@@ -228,7 +228,7 @@ let &t_EI="\<Esc>[1 q"
 
 
 "------------------------------------------------------------
-" Indentation options 
+" Indentation options
 "
 " Indentation settings according to personal preference.
 
@@ -241,7 +241,7 @@ set expandtab
 " Python tabstops are set in ~/.vim/ftplugin/python.vim
 
 "------------------------------------------------------------
-" Mappings 
+" Mappings
 "
 " Type `,b` to go to the BUILD file for this file.
 function! GoToBuild()
@@ -282,7 +282,7 @@ nmap Y y$
 " :input text: String confirmation dialog message.
 " :input options: Confirmation options. Ex: '&Yes\n&No' gives a yes or no
 "                 choice.
-:function! BinaryConfirmDecorator(func, text, options) 
+:function! BinaryConfirmDecorator(func, text, options)
 :  if confirm(a:text, a:options, 1) == 1
 :    call a:func()
 :  endif
@@ -463,7 +463,7 @@ call togglebg#map("<F5>")
 " let g:ycm_register_as_syntastic_checker=0
 " " Set this to use CTags
 " let g:ycm_goto_buffer_command = 'horizontal-split'
-" 
+"
 " " Disable the YCM bindings while we use CoC
 " " nnoremap <C-\> :YcmCompleter GoToDefinition<CR>
 " " nnoremap <bar> :YcmCompleter GoToInclude<CR>
@@ -790,3 +790,55 @@ let g:doge_doc_standard_python = 'numpy'
 " Disable the tab jumping for doge. This allows for using tab auto complete and
 " disables auto insert mode.
 let g:doge_comment_interactive = 0
+
+"------------------------------------------------------------}
+" Copilot Config
+" https://github.com/github/copilot.vim
+" Suggestions are displayed inline and can be accepted by pressing the tab
+" key. See :help copilot for more information.
+
+nnoremap ,cp :Copilot panel<CR>
+nnoremap ,cs :Copilot status<CR>
+nnoremap ,ce :Copilot enable<CR>
+nnoremap ,cd :Copilot disable<CR>
+" If you'd rather use a key that isn't <Tab>, define an <expr> map that calls
+" copilot#Accept().  Here's an example with CTRL-J:
+" >
+inoremap <silent><script><expr> <C-a> copilot#Accept("\<CR>")
+let g:copilot_no_tab_map = v:true
+
+" The argument to copilot#Accept() is the fallback for when no suggestion is
+" displayed.  In this example, a regular carriage return is used.  If no
+" fallback is desired, use an argument of "" (an empty string).
+"
+" TODO(carden): Process  other copilot mappings.
+" Other Maps ~
+"
+"                                                 *copilot-i_CTRL-]*
+" <C-]>                   Dismiss the current suggestion.
+" <Plug>(copilot-dismiss)
+"
+"                                                 *copilot-i_ALT-]*
+" <M-]>                   Cycle to the next suggestion, if one is available.
+" <Plug>(copilot-next)
+"
+"                                                 *copilot-i_ALT-[*
+" <M-[>                   Cycle to the previous suggestion.
+" <Plug>(copilot-previous)
+"
+"                                                 *copilot-i_ALT-\*
+" <M-\>                   Explicitly request a suggestion, even if Copilot
+" <Plug>(copilot-suggest) is disabled.
+"
+" Use control here because alt isn't sent over ssh properly.
+" Source:
+" https://apple.stackexchange.com/questions/366473/passing-alt-opt-key-sequence-over-ssh-to-remote-host-with-iterm
+inoremap <C-\> <Plug>(copilot-suggest)
+" SYNTAX HIGHLIGHTING                             *copilot-highlighting*
+"
+" Inline suggestions are highlighted using the CopilotSuggestion group,
+" defaulting to a medium gray.  The best place to override this is a file named
+" after/colors/<colorschemename>.vim in your 'runtimepath' (e.g.,
+" ~/.config/nvim/after/colors/solarized.vim).  Example declaration:
+" >
+highlight CopilotSuggestion guifg=#f7f7f7 ctermfg=244

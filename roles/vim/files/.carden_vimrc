@@ -542,6 +542,22 @@ command! -bang FzfDirGrep call fzf#run(fzf#wrap({
 " Use Fzf to select a subdirectory for the grep criteria.
 nnoremap <leader>gd :FzfDirGrep <cr>
 
+" command! -bang FzfBazelComplete call fzf#run(fzf#wrap({
+"       \ 'source': "bazel query '...' --output label",
+"       \ 'sink': '*'
+"       \ }, <bang>0))
+function! s:insertBazelTarget(line)
+
+  execute 'normal! o"' . a:line . '",'
+endfunct!
+command! -bang PrivateSearchBazelTargetsWithFzf call fzf#run(fzf#wrap({
+      \ 'source': "bazel query '...' --output label",
+      \ 'sink': function('s:insertBazelTarget')
+      \ }, <bang>0))
+nnoremap <Leader>,b :PrivateSearchBazelTargetsWithFzf <cr>
+
+
+
 " Other notes about this:
 " Not needed if using :Grepper -cd, but, for later reference, here is an
 " example of how the user could be prompted separately for search terms.

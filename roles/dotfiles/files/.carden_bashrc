@@ -6,10 +6,10 @@ export CLICOLOR=1
 # for examples
 
 # If not running interactively, don't do anything
-case $- in
-    *i*) ;;
-      *) return;;
-esac
+# case $- in
+#     *i*) ;;
+#       *) return;;
+# esac
 
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
@@ -70,6 +70,32 @@ fi
 #     echo $?
 #     return $? 
 # }
+function check_auth_status {
+    local status_command_output
+    local status_command_exit_code
+
+    # Execute the command and capture its output and exit code
+    status_command_output=$(authcli gcp status --output json 2>&1)  # Redirect stderr to stdout to capture all output
+    status_command_exit_code=$?
+
+    # Check if the command exists and executes without errors
+    if [ $status_command_exit_code -eq 127 ]; then
+        return -1
+      elif [ $status_command_exit_code -ne 0 ]; then
+          return -1
+    fi
+
+    # Requires authcli and jq!
+    # Simulated JSON data
+    # Using jq to check for the string "INVALID"
+    auth_invalid=$( echo "$status_command_output" | jq 'map(select(.status == "INVALID")) | length')
+    
+    if [ "$auth_invalid" -gt 0 ]; then
+        return 0
+    else
+        return 1
+    fi
+}
 
 # check_auth_status() {
 #   get_user;
@@ -84,22 +110,31 @@ fi
 #   fi
 # }
 
-# auth_status() {
-# # \[\033[1;32m\]\u:\[\033[1;34m\] \W\[\033[1;34m\] \$\[\033[0m\]
-#   GREEN="\[\e[32m\]"
-#   RED="\[\e[31m\]"
-#   SUFFIX="\[\e[0m\]"
-#   if $(check_auth_status);
-#   then
-#     echo "${RED}NEED_AUTH${SUFFIX}"
-#   else
-#     echo "${GREEN}AUTH${SUFFIX}"
-#   fi
-# }
+auth_status() {
+# \[\033[1;32m\]\u:\[\033[1;34m\] \W\[\033[1;34m\] \$\[\033[0m\]
+  # Non-printing characters, such as color codes or command substitutions that output control characters,
+  # must be enclosed within \[ and \].
+  # These Bash escapes tell the shell that the characters within are not part of the prompt’s printable length.
+  # \[\e[32m\] and \[\e[0m\]: These are ANSI color codes for setting the text color.
+  # \e[32m sets the color to green, and \e[0m resets it to the default terminal color.
+  # The \[ and \] around these codes tell Bash that these sequences do not occupy space in terms of line width.
+  GREEN="\[\e[32m\]"
+  RED="\[\e[31m\]"
+  SUFFIX="\[\e[0m\]"
+  check_auth_status
+  auth_status_int=$?
+  if [ "$auth_status_int" -eq 0 ]; then
+    echo "${RED}NEED_AUTH${SUFFIX}, "
+  elif [ "$auth_status_int" -eq 1 ]; then
+    echo "${GREEN}AUTH${SUFFIX}, "
+  else
+    echo ""
+  fi
+}
 
 # Function to get info about what virtualenv you're currently in so you can add to PS1.
 function virtualenv_info(){
-    venv=''
+    local venv=''
     # Get Virtual Env
     if [[ -n "$VIRTUAL_ENV" ]]; then
         # Strip out the path and just leave the env name
@@ -123,7 +158,7 @@ export PS1="\u@\h:\w\$ "
 # TODO(carden): Debug the escape sequences here.
 ps1_stuff() {
   export PS1="\u@\h:\w\$ "
-#   auth_str="$(auth_status), "
+  auth_str="$(auth_status)"
   # Handle color_prompt logic from before in PS1.
   # TODO(carden): Determine the source for this and ensure it's not causing issues.
   if [ "$color_prompt" = yes ]; then
@@ -139,7 +174,8 @@ ps1_stuff() {
   case "$TERM" in
   xterm*|rxvt*)
       # PS1=$auth_str", ""\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]"
-      PS1=$auth_str", ${debian_chroot:+($debian_chroot)}\u@\h:\w\\$ "
+      # PS1=$auth_str", ${debian_chroot:+($debian_chroot)}\u@\h:\w\\$ "
+      PS1="${debian_chroot:+($debian_chroot)}\u@\h:\w\\$ "
       ;;
   *)
       ;;
@@ -147,6 +183,8 @@ ps1_stuff() {
 
   # Prepend VENV status to PS1 here.
   PS1="${VENV}"$PS1
+  # Prepend auth status to PS1 here.
+  PS1="${auth_str}"$PS1
 }
 PROMPT_COMMAND=ps1_stuff
 # Some debug stuff
@@ -205,9 +243,10 @@ fixssh() {
 
 # Checks if a tmux session is active. If not, starts one named 'carden'.
 # If already exists, then it attaches to 'carden'
-if [ ! $TMUX ]; then
-    tmux new-session -A -s carden
-fi
+# if [ ! $TMUX ]; then
+#     tmux new-session -A -s carden
+# fi
+
 
 alias gitflow="python3 ~/.local/bin/gitflow"
 
@@ -255,6 +294,12 @@ alias server="python3 -m http.server $1"
 # https://stackoverflow.com/questions/50737059/how-to-remove-docker-images-which-created-7-days-ago-automatically
 alias docker-prune-old="docker image prune -a --force --filter 'until=168h'"
 
+# Allows for tmux-ing to a server with iterm2 integration.
+# Ex: tmux_ssh personal-desktop # Where personal-desktop is an ssh alias.
+tmux_ssh() {
+  ssh -o LogLevel=QUIET -t "$1" 'tmux -CC new -A -s carden';
+}
+
 # Finds subdirectories older than the provided number of days.
 # ctime for directory is with files are added or removed from the directory.
 # https://stackoverflow.com/questions/13868821/shell-script-to-delete-directories-older-than-n-days
@@ -265,6 +310,7 @@ find_old_dir () {
     find "${parent_dir}"/* -type d -ctime +${num_days}
 }
 alias find-old-dir=find_old_dir
+PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
 
 # Allows for tmux-ing to a server with iterm2 integration.
 # Ex: tmux_ssh personal-desktop # Where personal-desktop is an ssh alias.
@@ -294,3 +340,18 @@ function frg {
             $EDITOR +"${linenumber}" "$file"
     fi
   }
+
+# =============================================================================
+# tmux bash history control
+# =============================================================================
+if [ -f $HOME/.bash_history_control ]; then
+    . $HOME/.bash_history_control
+fi
+
+bazel_run_fzf() {
+  tgt=$(bazel query ... --output label | fzf)
+  echo "bazel run ${tgt}"
+  bazel run $tgt
+}
+
+alias brfzf=bazel_run_fzf

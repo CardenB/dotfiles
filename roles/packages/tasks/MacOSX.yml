@@ -5,6 +5,31 @@
         name: mosh
         state: latest
 
+  - name: Install bat for frg command
+    become: no
+    homebrew:
+        name: bat
+        state: latest
+
+  - name: Create a symlink for bat as batcat
+    ansible.builtin.shell:
+      cmd: |
+        ln -sf "$(brew --prefix)/bin/bat" "$(brew --prefix)/bin/batcat"
+    args:
+      executable: /bin/bash
+    register: result
+    changed_when: "'created' in result.stdout or 'created' in result.stderr"
+
+  - name: Verify symlink for batcat
+    ansible.builtin.stat:
+      path: "{{ lookup('pipe', 'brew --prefix') }}/bin/batcat"
+    register: symlink_status
+
+  - name: Confirm symlink creation
+    ansible.builtin.debug:
+      msg: "Symlink for batcat successfully created at {{ symlink_status.stat.path }}"
+    when: symlink_status.stat.exists
+
   - name: Insert/Update .bashrc to prepand /usr/local/bin to system path and prefer homebrew installs
     become: no
     blockinfile:

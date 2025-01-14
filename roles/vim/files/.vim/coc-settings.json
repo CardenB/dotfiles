@@ -1,4 +1,6 @@
 {
+  "clangd.enabled": true,
+  "python.linting.ruffEnabled": true,
   "suggest.noselect": true,
   "inlayHint.display": false,
   "floatFactory.floatConfig": {

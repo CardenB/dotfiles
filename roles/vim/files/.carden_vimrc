@@ -707,6 +707,8 @@ let g:qfenter_keymap.topen = ['<C-t>']
 "------------------------------------------------------------}
 " CoC Config
 "
+" Extensions
+let g:coc_global_extensions = ['coc-pyright']
 
 " Map goto def bindings like YCM.
 nnoremap <C-\> :call CocActionAsync('jumpDefinition', 'vsplit')<CR>

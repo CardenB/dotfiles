@@ -1,6 +1,6 @@
 - block:
   # Install tmux according to platform.
-  - include: "{{ ansible_distribution }}.yml"
+  - include_tasks: "{{ ansible_distribution }}.yml"
 
   - name: Set up tmux plugin manager
     git:
@@ -8,7 +8,7 @@
       dest: "{{ home_dir }}/.tmux/plugins/tpm"
 
   # Setup .tmux.conf
-  - include: "tmux_conf.yml"
+  - include_tasks: "tmux_conf.yml"
 
   - name: Install tmux plugins
     command:

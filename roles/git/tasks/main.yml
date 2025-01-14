@@ -1,6 +1,6 @@
 - block:
   # Install git in a platform independent way.
-  - include: "{{ ansible_distribution }}.yml"
+  - include_tasks: "{{ ansible_distribution }}.yml"
 
   # Copy dotfiles
-  - include: "dotfiles.yml"
+  - include_tasks: "dotfiles.yml"

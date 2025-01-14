@@ -1,6 +1,6 @@
 - block:
   # Install vim in a platform independent way.
-  - include: "{{ ansible_distribution }}.yml"
+  - include_tasks: "{{ ansible_distribution }}.yml"
 
   - name: Set up vundle plugin manager
     become: no
@@ -15,4 +15,4 @@
       dest: "{{ home_dir }}/.vim/pack/github/start/copilot.vim"
 
   # Configure vimrc
-  - include: "vimrc.yml"
+  - include_tasks: "vimrc.yml"

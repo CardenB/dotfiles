@@ -14,4 +14,4 @@
     when: not (ycm_dir_state.stat.exists or ycm_dir_state.stat.isdir)
 
   # Install dependencies according to platform.
-  - include: "{{ ansible_distribution }}.yml"
+  - include_tasks: "{{ ansible_distribution }}.yml"

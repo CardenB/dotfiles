@@ -3,15 +3,14 @@
 
   - name: Install termcolor for gitflow
     pip:
-      executable: pip3
+      virtualenv: "{{ venv_dir }}"
       name: termcolor
       state: latest
-      extra_args: --user
     tags: [python, gitflow]
 
   - name: Install general python packages.
     pip:
-      executable: pip3
+      virtualenv: "{{ venv_dir }}"
       name:
         - autopep8
         - yapf
@@ -20,7 +19,6 @@
         - ipython
         - isort
       state: latest
-      extra_args: --user
     tags: [python]
 
   - name: Copy ipython config.
@@ -35,8 +33,7 @@
 
   - name: Manage virtual environments
     pip:
-      executable: pip3
+      virtualenv: "{{ venv_dir }}"
       name: virtualenvwrapper
       state: latest
-      extra_args: --user
     tags: [python]

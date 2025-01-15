@@ -2,6 +2,7 @@
 # home environment variable will be changed to /root/.
 home_dir: "{{ ansible_env.HOME }}"
 local_dir: "{{ home_dir }}/.local"
+venv_dir: "{{ local_dir }}/.venv"
 local_bin: "{{ local_dir }}/bin"
 local_src: "{{ local_dir }}/src"
 vim_dir: "{{ local_src }}/vim"

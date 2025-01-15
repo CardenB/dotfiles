@@ -9,8 +9,8 @@
     apt:
       pkg:
         - build-essential
-        - g++-8
-        - gcc-8
+        - g++-10
+        - gcc-10
       state: latest
 
   - name: Abort if vim_dir already exists.
@@ -35,8 +35,8 @@
     become: yes
     apt:
       pkg:
-        - python3.9
-        - python3.9-dev
+        - python3.12
+        - python3.12-dev
       state: latest
 
   - name: Install checkinstall to track the package install
@@ -56,11 +56,12 @@
     git:
       repo: https://github.com/vim/vim.git
       dest: "{{ vim_dir }}"
+      version: v9.1.1016
 
-  - name: Store python3.9 config for use in vim config.
+  - name: Store python3.12 config for use in vim config.
     become: no
     command:
-      cmd: python3.9-config --configdir
+      cmd: python3.12-config --configdir
     register: python_config
 
   - name: Configure vim install pt 1
@@ -70,16 +71,17 @@
       chdir: "{{ vim_dir }}"
 
   - name: Configure vim install pt 2
-    become: no
+    # For some reason become is needed here for the install to work afterwards.
+    become: yes
     command:
       cmd: >
-        ./configure --with-features=huge --with-python3-command=python3.9 --enable-python3interp=yes --with-python3-config-dir="{{ python_config.stdout }}" --enable-multibyte --enable-rubyinterp=yes --enable-cscope --enable-perlinterp --enable-luainterp --enable-gui=gtk2 --prefix="{{ local_dir }}"
+        ./configure --with-features=huge --with-python3-command=python3.12 --enable-python3interp=yes --with-python3-config-dir="{{ python_config.stdout }}" --enable-multibyte --enable-rubyinterp=yes --enable-cscope --enable-perlinterp --enable-luainterp --enable-terminal --disable-gui --prefix="{{ local_dir }}"
       chdir: "{{ vim_dir }}"
 
   - name: Configure vim install pt 3
     become: no
     environment:
-      VIMRUNTIMEDIR: "{{ local_dir }}/share/vim/vim90"
+      VIMRUNTIMEDIR: "{{ local_dir }}/share/vim/vim91"
     command:
       cmd: make
       chdir: "{{ vim_dir }}"
@@ -87,7 +89,9 @@
   - name: Install vim
     become: yes
     command:
-      cmd: checkinstall -y
+      # fstrans is needed because mkdir does not function correctly otherwise.
+      # See: https://stackoverflow.com/questions/4975127/why-isnt-mkdir-p-working-right-in-a-script-called-by-checkinstall
+      cmd: checkinstall -y --fstrans=no
       chdir: "{{ vim_dir }}"
 
   - name: Remove vim source

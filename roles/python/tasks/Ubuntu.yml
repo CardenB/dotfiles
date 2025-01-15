@@ -1,11 +1,21 @@
 - block:
-  - name: Install python3.9 packages
+  - name: Install python3.12 packages
     become: yes
     apt:
       pkg:
-        - python3.9
-        - python3.9-dev
+        - python3.12
+        - python3.12-dev
+        - python3.12-venv
         - python3-pip
       state: latest
     tags: python
 
+  - name: Create the virtual environment if it doesn't exist
+    command: python3 -m venv  "{{ venv_dir }}"
+    args:
+      creates: "{{ venv_dir }}"
+  - name: Install virtualenv globally if possible
+    become: no
+    apt:
+      name: virtualenv
+      state: present

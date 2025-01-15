@@ -8,8 +8,8 @@
         - ncurses-dev
         - pkg-config
         - bat
+        - bison
         # Other packages that may be required.
-        # - bison
         # - gcc
         # - make
       state: present

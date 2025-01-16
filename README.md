@@ -20,3 +20,13 @@ can also be found in the bashrc.
 
 From now on, install ansible, then invoke the ansible installation path, via
 `./setup.sh`.
+
+
+## Python Packages
+
+Python packages are now installed in a virtual environment.
+It is expected that you activate the venv each session.
+
+```
+. ~/.local/.venv/bin/activate
+```

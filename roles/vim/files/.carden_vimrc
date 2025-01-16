@@ -444,10 +444,18 @@ set colorcolumn=120
 syntax enable
 set background=dark
 " " Force terminal colors to 16.
+" " Sometimes this is helpful. See here:
+" https://stackoverflow.com/questions/5560658/ubuntu-vim-and-the-solarized-color-palette
 " set t_Co=16
 " let g:solarized_termtrans = 1
 " let g:solarized_termcolors=16
 colorscheme solarized
+" This may be needed in order to fix the issue where the background is
+" inverted with highlights.
+" See here: https://github.com/vercel/hyper/issues/4264
+" For WSL, I also had to use solarized dark patched theme for my terminal.
+" See here: https://github.com/Lucky-Loek/patched-solarized-dark-windows-terminal
+highlight Normal ctermbg=none
 " Set toggle color command (between nighttime and daytime).
 call togglebg#map("<F5>")
 

@@ -36,7 +36,25 @@
     command:
       cmd: vim -E -s -c "source {{ home_dir }}/.vimrc" -c PluginInstall! -c qall
 
+  - name: Install NPM and Node.js to run CoC.nvim
+    become: yes
+    apt:
+      pkg:
+        - nodejs
+        - npm
+      state: present
+
+  - name: Vim Plug plugin install
+    become: no
+    ignore_errors: yes
+    # Need to ignore errors since vim gives return code 1 here for some reason.
+    # See: https://stackoverflow.com/questions/33672491/how-to-use-ansible-to-provision-vim-vundle-plugin
+    command:
+      cmd: vim -E -s -c "source {{ home_dir }}/.vimrc" -c PlugInstall! -c qall
+
   - name: Install CoC extensions from vimrc
+    become: no
+    ignore_errors: yes
     shell: |
       vim --not-a-term +'source ~/.vimrc' +'CocInstall -sync' +':CocInstall -sync $(vim --not-a-term +"source ~/.vimrc" +":echo join(g:coc_global_extensions, \" \")")' +qall
     args:

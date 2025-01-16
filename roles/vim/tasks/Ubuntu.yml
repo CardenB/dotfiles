@@ -56,7 +56,7 @@
     git:
       repo: https://github.com/vim/vim.git
       dest: "{{ vim_dir }}"
-      version: v9.1.1016
+      version: v9.0.0438
 
   - name: Store python3.12 config for use in vim config.
     become: no
@@ -81,7 +81,7 @@
   - name: Configure vim install pt 3
     become: no
     environment:
-      VIMRUNTIMEDIR: "{{ local_dir }}/share/vim/vim91"
+      VIMRUNTIMEDIR: "{{ local_dir }}/share/vim/vim90"
     command:
       cmd: make
       chdir: "{{ vim_dir }}"

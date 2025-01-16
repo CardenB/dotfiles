@@ -355,3 +355,6 @@ bazel_run_fzf() {
 }
 
 alias brfzf=bazel_run_fzf
+
+# To enable keychain for caching ssh credentials.
+eval `keychain --eval`

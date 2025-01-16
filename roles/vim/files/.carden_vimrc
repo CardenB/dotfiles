@@ -45,7 +45,7 @@ Plugin 'kkoomen/vim-doge'
 
 " Next gen autocomplete, intended to replace YCM.
 " https://github.com/neoclide/coc.nvim
-Plugin 'neoclide/coc.nvim'
+" Plugin 'neoclide/coc.nvim'
 
 " Plugin for solarized colorscheme
 Plugin 'altercation/vim-colors-solarized'
@@ -81,6 +81,15 @@ Plugin 'yssl/QFEnter'
 
 " All of your Plugins must be added before the following line
 call vundle#end()                   " required
+
+
+" vim-plug configuration
+call plug#begin('~/.vim/plugged')
+" Your vim-plug plugins here
+
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+call plug#end()
 
 " Attempt to determine the type of a file based on its name and possibly its
 " contents. Use this to allow intelligent auto-indenting for each filetype,

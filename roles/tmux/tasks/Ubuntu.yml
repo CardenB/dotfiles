@@ -38,6 +38,7 @@
     tags: tmux
 
   - name: Installing via make install
+    become: yes
     make:
       chdir: "{{ local_src }}/tmux"
       target: install

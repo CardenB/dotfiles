@@ -5,4 +5,5 @@
       pkg:
         - mosh
         - bat
+        - keychain
       state: latest

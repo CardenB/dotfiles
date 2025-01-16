@@ -14,5 +14,17 @@
       repo: git@github.com:github/copilot.vim.git
       dest: "{{ home_dir }}/.vim/pack/github/start/copilot.vim"
 
+  - name: Ensure .vim/autoload directory exists
+    ansible.builtin.file:
+      path: "{{ ansible_env.HOME }}/.vim/autoload"
+      state: directory
+      mode: '0755'
+
+  - name: Set up vim plug plugin manager
+    become: no
+    get_url:
+      url: https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+      dest: "{{ home_dir }}/.vim/autoload/plug.vim"
+
   # Configure vimrc
   - include_tasks: "vimrc.yml"

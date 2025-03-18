@@ -78,6 +78,11 @@ function check_auth_status {
     status_command_output=$(authcli gcp status --output json 2>&1)  # Redirect stderr to stdout to capture all output
     status_command_exit_code=$?
 
+    # Handle case where null output discovered. Prevent other errors downstream.
+    if ! echo "$status_command_output" | jq empty 2>/dev/null; then
+        return 1
+    fi
+
     # Check if the command exists and executes without errors
     if [ $status_command_exit_code -eq 127 ]; then
         return -1

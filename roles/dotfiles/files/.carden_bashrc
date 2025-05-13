@@ -361,5 +361,14 @@ bazel_run_fzf() {
 
 alias brfzf=bazel_run_fzf
 
+# Add Homebrew to PATH on macOS (no-op on Linux, no duplicates)
+if [[ "$(uname)" == "Darwin" ]]; then
+  if [[ -d /opt/homebrew/bin && ":$PATH:" != *":/opt/homebrew/bin:"* ]]; then
+    export PATH="/opt/homebrew/bin:$PATH"
+  elif [[ -d /usr/local/bin && ":$PATH:" != *":/usr/local/bin:"* ]]; then
+    export PATH="/usr/local/bin:$PATH"
+  fi
+fi
+
 # To enable keychain for caching ssh credentials.
 eval `keychain --eval`

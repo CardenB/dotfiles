@@ -5,13 +5,13 @@
   - name: Set up vundle plugin manager
     become: no
     git:
-      repo: git@github.com:VundleVim/Vundle.vim.git
+      repo: https://github.com/VundleVim/Vundle.vim.git
       dest: "{{ home_dir }}/.vim/bundle/Vundle.vim"
 
   - name: Set up copilot vim plugin outside of vundle.
     become: no
     git:
-      repo: git@github.com:github/copilot.vim.git
+      repo: https://github.com/github/copilot.vim.git
       dest: "{{ home_dir }}/.vim/pack/github/start/copilot.vim"
 
   - name: Ensure .vim/autoload directory exists

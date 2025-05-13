@@ -9,7 +9,6 @@
     pip:
       virtualenv: "{{ venv_dir }}"
       name: GitPython==3.1.18
-      extra_args: --user
     tags: [gitflow]
 
   - name: Install gitflow

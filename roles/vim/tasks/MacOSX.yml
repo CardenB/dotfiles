@@ -9,3 +9,8 @@
   homebrew:
       name: yarn
       state: latest
+
+- name: Install Node.js and NPM for CoC.nvim on macOS
+  homebrew:
+    name: node
+    state: present

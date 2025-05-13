@@ -36,14 +36,6 @@
     command:
       cmd: vim -E -s -c "source {{ home_dir }}/.vimrc" -c PluginInstall! -c qall
 
-  - name: Install NPM and Node.js to run CoC.nvim
-    become: yes
-    apt:
-      pkg:
-        - nodejs
-        - npm
-      state: present
-
   - name: Vim Plug plugin install
     become: no
     ignore_errors: yes

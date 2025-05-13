@@ -21,12 +21,18 @@
       name: dotfiles
       tasks_from: source_bashrc
 
-  - name: Check if python 3.6.15 is already installed
+  - name: Check if python 3.13.3 is already installed
     become: no
     stat:
-      path: "~/.pyenv/versions/3.6.15"
-    register: pyenv3615_state
+      path: "~/.pyenv/versions/3.13.3"
+    register: pyenv3133_state
 
-  - name: Install python 3.6.15
-    command: pyenv install 3.6.15
-    when: not (pyenv3615_state.stat.exists)
+  - name: Install python 3.13.3
+    command: pyenv install 3.13.3
+    when: not (pyenv3133_state.stat.exists)
+
+  - name: Install virtualenv via pip
+    become: no
+    homebrew:
+        name: virtualenv
+        state: latest

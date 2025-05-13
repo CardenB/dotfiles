@@ -99,3 +99,11 @@
     file:
       path: "{{ vim_dir }}"
       state: absent
+
+  - name: Install NPM and Node.js to run CoC.nvim
+    become: yes
+    apt:
+      pkg:
+        - nodejs
+        - npm
+      state: present

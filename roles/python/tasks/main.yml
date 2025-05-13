@@ -6,7 +6,6 @@
       virtualenv: "{{ venv_dir }}"
       name: termcolor
       state: latest
-      extra_args: --user
     tags: [python, gitflow]
 
   - name: Install general python packages.
@@ -20,7 +19,6 @@
         - ipython
         - isort
       state: latest
-      extra_args: --user
     tags: [python]
 
   - name: Copy ipython config.
@@ -38,5 +36,4 @@
       virtualenv: "{{ venv_dir }}"
       name: virtualenvwrapper
       state: latest
-      extra_args: --user
     tags: [python]

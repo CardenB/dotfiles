@@ -1,4 +1,4 @@
-#!/usr/bin/python3.9
+#!/usr/bin/python3
 """
 TODOs:
     * Add divergence counts from tracked branch to gitflow prompt.

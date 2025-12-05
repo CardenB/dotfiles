@@ -1,6 +1,6 @@
 - block:
   - name: Set default shell to bash for Mac
-    become: no
+    become: yes
     command: chsh -s /bin/bash
     when: ansible_distribution == "MacOSX"
 

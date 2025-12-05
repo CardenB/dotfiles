@@ -44,3 +44,15 @@
     include_role:
       name: dotfiles
       tasks_from: source_bashrc
+
+  - name: Install keychain for for ssh key management
+    become: no
+    homebrew:
+        name: keychain
+        state: latest
+
+  - name: Install ripgrep
+    become: no
+    homebrew:
+        name: ripgrep
+        state: latest

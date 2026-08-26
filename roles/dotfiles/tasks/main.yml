@@ -4,6 +4,42 @@
     command: chsh -s /bin/bash
     when: ansible_distribution == "MacOSX"
 
+  - name: Ensure personal SSH configuration directory exists
+    become: no
+    ansible.builtin.file:
+      path: "{{ home_dir }}/.ssh"
+      state: directory
+      mode: '0700'
+    tags: dotfiles
+
+  - name: Install SSH agent forwarding helpers
+    become: no
+    ansible.builtin.copy:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+      mode: "{{ item.mode }}"
+    loop:
+      - src: .ssh_rc
+        dest: "{{ home_dir }}/.ssh/rc"
+        mode: '0700'
+      - src: .ssh_agent_forwarding
+        dest: "{{ home_dir }}/.ssh/agent-forwarding.sh"
+        mode: '0600'
+    tags: dotfiles
+
+  - name: Source SSH agent recovery before bash startup guards
+    become: no
+    ansible.builtin.blockinfile:
+      path: "{{ home_dir }}/.bashrc"
+      create: yes
+      insertbefore: BOF
+      marker: '# {mark} SSH agent forwarding'
+      block: |
+        if [ -r "$HOME/.ssh/agent-forwarding.sh" ]; then
+            . "$HOME/.ssh/agent-forwarding.sh"
+        fi
+    tags: dotfiles
+
   - name: Copy relevant dotfiles
     become: no
     copy:

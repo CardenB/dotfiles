@@ -242,8 +242,30 @@ alias tmux="TERM=screen-256color-bce tmux"
 
 # Command to fix SSH_AUTH_SOCK update issues within tmux.
 # Source: https://stackoverflow.com/questions/21378569/how-to-auto-update-ssh-agent-environment-variables-when-attaching-to-existing-tm
+_refresh_tmux_ssh_auth_sock() {
+  local tmux_env socket
+  [ -n "$TMUX" ] || return 1
+  tmux_env=$(tmux show-environment SSH_AUTH_SOCK 2>/dev/null) || return 1
+  case "$tmux_env" in
+    SSH_AUTH_SOCK=*) socket="${tmux_env#SSH_AUTH_SOCK=}" ;;
+    *) return 1 ;;
+  esac
+  [ -S "$socket" ] || return 1
+  export SSH_AUTH_SOCK="$socket"
+}
+
 fixssh() {
-  eval $(tmux show-env -s |grep '^SSH_')
+  if [ -z "$TMUX" ]; then
+    echo "Not inside a tmux session; SSH_AUTH_SOCK is managed by the shell."
+  elif ! _refresh_tmux_ssh_auth_sock; then
+    echo "tmux does not currently have a live forwarded SSH agent socket."
+  fi
+}
+
+# Existing panes do not automatically inherit a forwarded socket captured when
+# a client attaches, so refresh it from tmux before each prompt.
+_auto_fixssh() {
+  _refresh_tmux_ssh_auth_sock >/dev/null 2>&1 || true
 }
 
 # Checks if a tmux session is active. If not, starts one named 'carden'.
@@ -269,15 +291,6 @@ elif [[ -f "$OTHER_VENV_FILE" ]]; then
 fi
 
 export EDITOR=vim
-# Needed to fix an issue with auth ssh over tmux on the host machine.
-# # Requires changes to ~/.tmux.conf as well.
-# # More info here: https://blog.testdouble.com/posts/2016-11-18-reconciling-tmux-and-ssh-agent-forwarding/
-# # TODO(carden): Put this in ~/.ssh/rc
-# if test "$SSH_AUTH_SOCK" ; then
-#   ln -sf $SSH_AUTH_SOCK ~/.ssh/ssh_auth_sock
-# fi
-# Trying to simply have this config to handle auth sock fixes.
-SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock
 
 # Enables vi mode for the terminal.
 set -o vi;
@@ -315,7 +328,7 @@ find_old_dir () {
     find "${parent_dir}"/* -type d -ctime +${num_days}
 }
 alias find-old-dir=find_old_dir
-PROMPT_COMMAND="history -a; history -n; $PROMPT_COMMAND"
+PROMPT_COMMAND="_auto_fixssh; history -a; history -n; $PROMPT_COMMAND"
 
 # Allows for tmux-ing to a server with iterm2 integration.
 # Ex: tmux_ssh personal-desktop # Where personal-desktop is an ssh alias.

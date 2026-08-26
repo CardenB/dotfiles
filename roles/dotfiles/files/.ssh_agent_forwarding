@@ -1,0 +1,16 @@
+# Recover a live forwarded SSH agent socket. This file is sourced near the
+# beginning of ~/.bashrc so non-interactive tools can use the forwarded agent.
+_ssh_sock_dir="$HOME/.ssh/ssh-auth-socks"
+if command -v ssh-add >/dev/null 2>&1 && [ -d "$_ssh_sock_dir" ]; then
+    if ! SSH_AUTH_SOCK="${SSH_AUTH_SOCK:-}" ssh-add -l >/dev/null 2>&1; then
+        for _ssh_sock_name in $(command ls -t "$_ssh_sock_dir" 2>/dev/null); do
+            _ssh_sock_candidate="$_ssh_sock_dir/$_ssh_sock_name"
+            if [ -S "$_ssh_sock_candidate" ] &&
+                    SSH_AUTH_SOCK="$_ssh_sock_candidate" ssh-add -l >/dev/null 2>&1; then
+                export SSH_AUTH_SOCK="$_ssh_sock_candidate"
+                break
+            fi
+        done
+    fi
+fi
+unset _ssh_sock_dir _ssh_sock_name _ssh_sock_candidate

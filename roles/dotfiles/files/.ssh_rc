@@ -1,0 +1,35 @@
+# Register this SSH session's forwarded agent socket for shells and tmux panes.
+if [ -S "${SSH_AUTH_SOCK:-}" ]; then
+    _ssh_sock_dir="$HOME/.ssh/ssh-auth-socks"
+    mkdir -p "$_ssh_sock_dir"
+    chmod 700 "$_ssh_sock_dir"
+
+    # Prune symlinks whose socket targets no longer exist.
+    for _ssh_sock_link in "$_ssh_sock_dir"/*; do
+        [ -L "$_ssh_sock_link" ] || continue
+        [ -S "$_ssh_sock_link" ] || rm -f "$_ssh_sock_link"
+    done
+
+    _ssh_sock_name="${SSH_TTY:+$(basename "$SSH_TTY")}"
+    _ssh_sock_name="${_ssh_sock_name:-$(basename "$SSH_AUTH_SOCK")}"
+    if [ -n "$_ssh_sock_name" ]; then
+        ln -sfn "$SSH_AUTH_SOCK" "$_ssh_sock_dir/$_ssh_sock_name"
+    fi
+
+    unset _ssh_sock_dir _ssh_sock_link _ssh_sock_name
+fi
+
+# Preserve OpenSSH's normal X11 forwarding setup when a user rc file exists.
+if read -r _ssh_x11_proto _ssh_x11_cookie && [ -n "${DISPLAY:-}" ]; then
+    case "$DISPLAY" in
+        localhost:*)
+            printf 'add unix:%s %s %s\n' \
+                "${DISPLAY#localhost:}" "$_ssh_x11_proto" "$_ssh_x11_cookie"
+            ;;
+        *)
+            printf 'add %s %s %s\n' \
+                "$DISPLAY" "$_ssh_x11_proto" "$_ssh_x11_cookie"
+            ;;
+    esac | xauth -q -
+fi
+unset _ssh_x11_proto _ssh_x11_cookie

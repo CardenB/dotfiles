@@ -18,6 +18,7 @@
     loop:
       - settings.json
       - extensions/session-pulse.ts
+      - extensions/terminal-title.ts
 
   # The extension settings UI rewrites this file, and machines may add their own
   # powerbar segments, so only seed it.

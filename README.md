@@ -35,10 +35,12 @@ It is expected that you activate the venv each session.
 
 `roles/pi` installs the portable configuration for the
 [pi coding agent](https://github.com/earendil-works/pi) into `~/.pi/agent`:
-`settings.json` (packages, default model, vim mode via `pi-vim`) and the
-`session-pulse` extension. Pi installs any listed package that is missing the
-next time it starts. `settings-extensions.json` is only seeded, since the
-extension settings UI rewrites it. Install pi itself separately, then run:
+`settings.json` (packages, default model, vim mode via `pi-vim`), the
+`session-pulse` extension, and the `terminal-title` extension, which drops the
+`π - ` prefix from terminal and tmux pane titles. Pi installs any listed
+package that is missing the next time it starts. `settings-extensions.json` is
+only seeded, since the extension settings UI rewrites it. Install pi itself
+separately, then run:
 
 ```
 ansible-playbook setup.yml --tags pi

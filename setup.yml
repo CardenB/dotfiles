@@ -14,3 +14,4 @@
     - {role: vim, tags: [vim]}
     # - {role: youcompleteme, tags: [vim, ycm]}
     - {role: dotfiles, tags: [dotfiles]}
+    - {role: pi, tags: [pi]}

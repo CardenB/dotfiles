@@ -30,3 +30,19 @@ It is expected that you activate the venv each session.
 ```
 . ~/.local/.venv/bin/activate
 ```
+
+## Pi
+
+`roles/pi` installs the portable configuration for the
+[pi coding agent](https://github.com/earendil-works/pi) into `~/.pi/agent`:
+`settings.json` (packages, default model, vim mode via `pi-vim`) and the
+`session-pulse` extension. Pi installs any listed package that is missing the
+next time it starts. `settings-extensions.json` is only seeded, since the
+extension settings UI rewrites it. Install pi itself separately, then run:
+
+```
+ansible-playbook setup.yml --tags pi
+```
+
+Credentials, sessions, caches, and workplace-specific extensions and MCP
+servers stay local to each machine.

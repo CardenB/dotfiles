@@ -1,0 +1,5 @@
+{
+  "powerbar": {
+    "left": "git-branch,tokens,context-usage,session-name,session-summary,workspace-context"
+  }
+}

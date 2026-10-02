@@ -1,0 +1,69 @@
+{
+  "packages": [
+    "npm:@juanibiapina/pi-extension-settings",
+    "npm:@jiah-liu/pi-cursor-provider",
+    "npm:pi-subagents",
+    "npm:pi-ask-user",
+    "npm:pi-web-access",
+    "git:github.com/VandeeFeng/pi-memory-md",
+    "npm:@devkade/pi-plan",
+    "npm:pi-simplify",
+    "npm:pi-add-dir",
+    "npm:pi-prompt-template-model",
+    "npm:@plannotator/pi-extension",
+    "npm:pi-slopchop",
+    "npm:@juanibiapina/pi-powerbar",
+    "npm:@tmustier/pi-usage-extension",
+    "npm:@tmustier/pi-raw-paste",
+    "npm:pi-btw",
+    "npm:pi-interactive-shell",
+    "git:github.com/javierportillo/pi-hackerman@63b0a3ef2c7b14985ffeb6cac44614ba59cd5693",
+    "npm:@victor-software-house/pi-curated-themes",
+    "npm:pi-terminal-theme",
+    "git:github.com/tintinweb/pi-manage-todo-list@2eb22d3b0c9dd981398d928c8edcc4afce202fa1",
+    "npm:pi-goal-x",
+    "npm:pi-schedule",
+    "npm:pi-vim"
+  ],
+  "subagents": {
+    "agentOverrides": {
+      "context-builder": {
+        "model": ""
+      },
+      "planner": {
+        "model": ""
+      },
+      "researcher": {
+        "model": ""
+      },
+      "reviewer": {
+        "model": ""
+      },
+      "scout": {
+        "model": ""
+      },
+      "worker": {
+        "model": ""
+      }
+    }
+  },
+  "tuiMode": "regular",
+  "terminal": {
+    "hyperlinks": true
+  },
+  "defaultProvider": "cursor",
+  "defaultModel": "claude-opus-5-5",
+  "defaultThinkingLevel": "high",
+  "skills": [
+    "~/.cursor/skills",
+    "~/.cursor/skills-cursor/autopilot",
+    "~/.cursor/skills-cursor/split-to-prs",
+    "~/.cursor/skills-cursor/create-rule",
+    "~/.cursor/skills-cursor/create-skill"
+  ],
+  "defaultTools": [
+    "+grep",
+    "+find",
+    "+ls"
+  ]
+}

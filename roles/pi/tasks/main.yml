@@ -1,0 +1,30 @@
+- block:
+  - name: Ensure pi agent directories exist
+    become: no
+    file:
+      path: "{{ item }}"
+      state: directory
+      mode: 0775
+    loop:
+      - "{{ home_dir }}/.pi/agent"
+      - "{{ home_dir }}/.pi/agent/extensions"
+
+  - name: Copy pi settings and extensions
+    become: no
+    copy:
+      src: "{{ item }}"
+      dest: "{{ home_dir }}/.pi/agent/{{ item }}"
+      mode: 0664
+    loop:
+      - settings.json
+      - extensions/session-pulse.ts
+
+  # The extension settings UI rewrites this file, and machines may add their own
+  # powerbar segments, so only seed it.
+  - name: Seed pi extension settings
+    become: no
+    copy:
+      src: settings-extensions.json
+      dest: "{{ home_dir }}/.pi/agent/settings-extensions.json"
+      mode: 0664
+      force: no

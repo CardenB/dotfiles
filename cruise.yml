@@ -17,3 +17,4 @@
       # Remove YCM from cruise setup in favor of CoC.
       # - {role: youcompleteme, tags: [vim, ycm], cmake_version: 3.14}
     - {role: dotfiles, tags: [dotfiles]}
+    - {role: pi, tags: [pi]}

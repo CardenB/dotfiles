@@ -40,6 +40,32 @@
         fi
     tags: dotfiles
 
+  - name: Ensure workspace prompt directories exist
+    become: no
+    ansible.builtin.file:
+      path: "{{ item }}"
+      state: directory
+      mode: '0755'
+    loop:
+      - "{{ local_bin }}"
+      - "{{ home_dir }}/.config"
+    tags: dotfiles
+
+  - name: Install Poppy workspace prompt configuration
+    become: no
+    ansible.builtin.copy:
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+      mode: "{{ item.mode }}"
+    loop:
+      - src: poppy-workspace-color
+        dest: "{{ local_bin }}/poppy-workspace-color"
+        mode: '0755'
+      - src: poppy-workspace-colors.conf
+        dest: "{{ home_dir }}/.config/poppy-workspace-colors.conf"
+        mode: '0644'
+    tags: dotfiles
+
   - name: Copy relevant dotfiles
     become: no
     copy:

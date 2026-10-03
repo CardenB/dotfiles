@@ -1,0 +1,85 @@
+#!/usr/bin/env bash
+
+set -u
+
+usage() {
+    echo "Usage: poppy-workspace-color [--code|--hex|--name] WORKSPACE" >&2
+}
+
+mode=code
+case "${1:-}" in
+    --code)
+        shift
+        ;;
+    --name)
+        mode=name
+        shift
+        ;;
+    --hex)
+        mode=hex
+        shift
+        ;;
+    --*)
+        usage
+        exit 2
+        ;;
+esac
+
+workspace="${1:-}"
+if [ -z "$workspace" ] || [ "$#" -ne 1 ]; then
+    usage
+    exit 2
+fi
+
+palette=(yellow orange red magenta violet blue cyan green)
+config="${POPPY_WORKSPACE_COLOR_CONFIG:-$HOME/.config/poppy-workspace-colors.conf}"
+color=""
+
+if [ -r "$config" ]; then
+    while IFS='=' read -r configured_workspace configured_color; do
+        configured_workspace="${configured_workspace#"${configured_workspace%%[![:space:]]*}"}"
+        configured_workspace="${configured_workspace%"${configured_workspace##*[![:space:]]}"}"
+        configured_color="${configured_color#"${configured_color%%[![:space:]]*}"}"
+        configured_color="${configured_color%"${configured_color##*[![:space:]]}"}"
+
+        case "$configured_workspace" in
+            ""|\#*)
+                continue
+                ;;
+        esac
+
+        if [ "$configured_workspace" = "$workspace" ]; then
+            color="$configured_color"
+            break
+        fi
+    done < "$config"
+fi
+
+case "$color" in
+    yellow|orange|red|magenta|violet|blue|cyan|green)
+        ;;
+    *)
+        checksum=$(printf '%s' "$workspace" | LC_ALL=C cksum)
+        checksum=${checksum%% *}
+        color="${palette[$((checksum % ${#palette[@]}))]}"
+        ;;
+esac
+
+case "$color" in
+    yellow)  code=136; hex="#b58900" ;;
+    orange)  code=166; hex="#cb4b16" ;;
+    red)     code=160; hex="#dc322f" ;;
+    magenta) code=125; hex="#d33682" ;;
+    violet)  code=61;  hex="#6c71c4" ;;
+    blue)    code=33;  hex="#268bd2" ;;
+    cyan)    code=37;  hex="#2aa198" ;;
+    green)   code=64;  hex="#859900" ;;
+esac
+
+if [ "$mode" = name ]; then
+    printf '%s\n' "$color"
+elif [ "$mode" = hex ]; then
+    printf '%s\n' "$hex"
+else
+    printf '%s\n' "$code"
+fi

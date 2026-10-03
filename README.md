@@ -21,6 +21,29 @@ can also be found in the bashrc.
 From now on, install ansible, then invoke the ansible installation path, via
 `./setup.sh`.
 
+## Poppy workspace prompt
+
+When the current directory is under `~/workspaces/<name>`, the Bash prompt
+includes a colored `[poppy:<name>]` badge. The badge disappears outside a
+Poppy workspace. Vim shows the same badge and color in its status line, while
+tmux automatically titles the current pane `poppy:<name>`.
+
+Workspace names are mapped deterministically onto the Solarized accent
+palette. To override a mapping, edit
+`roles/dotfiles/files/poppy-workspace-colors.conf`:
+
+```
+cruise3=green
+evalviz=violet
+```
+
+Supported colors are `yellow`, `orange`, `red`, `magenta`, `violet`, `blue`,
+`cyan`, and `green`. Apply the shell configuration with:
+
+```
+ansible-playbook setup.yml --tags dotfiles
+```
+
 
 ## Python Packages
 

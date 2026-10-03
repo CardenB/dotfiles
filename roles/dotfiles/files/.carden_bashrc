@@ -151,6 +151,51 @@ function virtualenv_info(){
     [[ -n "$venv" ]] && echo "($venv) "
 }
 
+# Returns the Poppy workspace containing the current directory.
+poppy_workspace_name() {
+  local workspace_root="${POPPY_WORKSPACES_ROOT:-$HOME/workspaces}"
+  local relative workspace
+
+  case "$PWD/" in
+    "$workspace_root/"*)
+      relative="${PWD#"$workspace_root"/}"
+      workspace="${relative%%/*}"
+      if [[ -n "$workspace" && "$workspace" != ".poppy" && -d "$workspace_root/$workspace" ]]; then
+        printf '%s\n' "$workspace"
+      fi
+      ;;
+  esac
+}
+
+# Formats a consistently colored Poppy workspace badge for PS1.
+poppy_workspace_prompt() {
+  local workspace color
+  workspace="$(poppy_workspace_name)"
+  [[ -n "$workspace" ]] || return 0
+
+  color="$("$HOME/.local/bin/poppy-workspace-color" --code "$workspace" 2>/dev/null)"
+  if [[ "$color" =~ ^[0-9]+$ ]] && (( color >= 0 && color <= 255 )); then
+    printf '%s' "\[\e[38;5;${color}m\][poppy:${workspace}]\[\e[0m\] "
+  else
+    printf '[poppy:%s] ' "$workspace"
+  fi
+}
+
+# Keeps the current tmux pane title aligned with its shell directory.
+poppy_tmux_update_pane_title() {
+  local workspace title
+  [[ -n "$TMUX" ]] || return 0
+
+  workspace="$(poppy_workspace_name)"
+  if [[ -n "$workspace" ]]; then
+    title="poppy:$workspace"
+  else
+    title="${PWD##*/}"
+    [[ -n "$title" ]] || title="/"
+  fi
+  tmux select-pane -T "$title" >/dev/null 2>&1 || true
+}
+
 # disable the default virtualenv prompt change
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 
@@ -164,6 +209,8 @@ export PS1="\u@\h:\w\$ "
 ps1_stuff() {
   export PS1="\u@\h:\w\$ "
   auth_str="$(auth_status)"
+  poppy_str="$(poppy_workspace_prompt)"
+  poppy_tmux_update_pane_title
   # Handle color_prompt logic from before in PS1.
   # TODO(carden): Determine the source for this and ensure it's not causing issues.
   if [ "$color_prompt" = yes ]; then
@@ -188,6 +235,8 @@ ps1_stuff() {
 
   # Prepend VENV status to PS1 here.
   PS1="${VENV}"$PS1
+  # Prepend the current Poppy workspace.
+  PS1="${poppy_str}"$PS1
   # Prepend auth status to PS1 here.
   PS1="${auth_str}"$PS1
 }

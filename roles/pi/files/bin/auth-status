@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+# Print AUTH or NEED_AUTH for gcloud and application-default credentials, for
+# statuslines and prompts. authcli takes ~0.2 s, so the result is cached and
+# re-checked in the background at most once a minute, or right away when the
+# credential files change (a re-auth). Prints nothing until the first check
+# finishes.
+#   auth-status            # plain text
+#   auth-status --color    # ANSI green/red
+set -uo pipefail
+
+cache="${XDG_CACHE_HOME:-$HOME/.cache}/auth-prompt"
+max_age=60
+gcloud_dir="${CLOUDSDK_CONFIG:-$HOME/.config/gcloud}"
+credential_files=("$gcloud_dir/application_default_credentials.json" "$gcloud_dir/credentials.db")
+
+check() {
+  local state=need
+  if authcli gcp status --output json 2>/dev/null |
+    jq -e 'length > 0 and all(.status == "VALID")' >/dev/null 2>&1; then
+    state=ok
+  fi
+  printf '%s\n' "$state" >"${cache}.$$" && mv -f "${cache}.$$" "$cache"
+}
+
+command -v authcli >/dev/null || exit 0
+
+credentials_changed=0
+for file in "${credential_files[@]}"; do
+  [[ "$file" -nt "$cache" ]] && credentials_changed=1
+done
+
+modified=$(stat -c %Y "$cache" 2>/dev/null || echo 0)
+if ((credentials_changed)); then
+  mkdir -p "${cache%/*}"
+  check
+elif ((EPOCHSECONDS - modified > max_age)); then
+  mkdir -p "${cache%/*}" && touch "$cache"
+  # Detached so statusline hosts that kill or wait on this process don't block
+  # on, or cancel, the check.
+  (check </dev/null >/dev/null 2>&1 &)
+fi
+
+state=''
+read -r state <"$cache" 2>/dev/null
+
+case "$state" in
+  ok) label=AUTH color=$'\e[32m' ;;
+  need) label=NEED_AUTH color=$'\e[31m' ;;
+  *) exit 0 ;;
+esac
+
+if [[ "${1:-}" == --color ]]; then
+  printf '%s%s\e[0m\n' "$color" "$label"
+else
+  printf '%s\n' "$label"
+fi

@@ -1,5 +1,31 @@
 - block:
-  - name: Ensure pi agent directories exist
+  # pi needs Node 22.19 or newer. Volta installs Node and pi per user, without
+  # root, on both Linux and macOS, and adds itself to the shell startup files.
+  - name: Install Volta
+    become: no
+    shell: "curl -fsSL https://get.volta.sh | bash"
+    args:
+      creates: "{{ volta_home }}/bin/volta"
+    environment:
+      VOLTA_HOME: "{{ volta_home }}"
+
+  - name: Install Node 22 as the Volta default
+    become: no
+    command: "{{ volta_home }}/bin/volta install node@22"
+    args:
+      creates: "{{ volta_home }}/tools/image/node/22.*"
+    environment:
+      VOLTA_HOME: "{{ volta_home }}"
+
+  - name: Install pi
+    become: no
+    command: "{{ volta_home }}/bin/volta install @earendil-works/pi-coding-agent"
+    args:
+      creates: "{{ volta_home }}/tools/image/packages/@earendil-works/pi-coding-agent"
+    environment:
+      VOLTA_HOME: "{{ volta_home }}"
+
+  - name: Ensure pi directories exist
     become: no
     file:
       path: "{{ item }}"
@@ -8,7 +34,10 @@
     loop:
       - "{{ home_dir }}/.pi/agent"
       - "{{ home_dir }}/.pi/agent/extensions"
+      - "{{ local_bin }}"
 
+  # Pi installs any package listed in settings.json that is missing the next
+  # time it starts.
   - name: Copy pi settings and extensions
     become: no
     copy:
@@ -17,15 +46,24 @@
       mode: 0664
     loop:
       - settings.json
+      - settings-extensions.json
       - extensions/session-pulse.ts
       - extensions/terminal-title.ts
 
-  # The extension settings UI rewrites this file, and machines may add their own
-  # powerbar segments, so only seed it.
-  - name: Seed pi extension settings
+  # Powerbar segments without a provider are hidden, so elsewhere the
+  # poppy-workspace and auth-status segments in settings-extensions.json do not
+  # show.
+  - name: Copy work statusline segments
     become: no
+    when: cruise
     copy:
-      src: settings-extensions.json
-      dest: "{{ home_dir }}/.pi/agent/settings-extensions.json"
-      mode: 0664
-      force: no
+      src: "{{ item.src }}"
+      dest: "{{ item.dest }}"
+      mode: "{{ item.mode }}"
+    loop:
+      - src: extensions/poppy-status.ts
+        dest: "{{ home_dir }}/.pi/agent/extensions/poppy-status.ts"
+        mode: '0664'
+      - src: bin/auth-status
+        dest: "{{ local_bin }}/auth-status"
+        mode: '0755'

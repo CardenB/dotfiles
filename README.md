@@ -33,18 +33,23 @@ It is expected that you activate the venv each session.
 
 ## Pi
 
-`roles/pi` installs the portable configuration for the
-[pi coding agent](https://github.com/earendil-works/pi) into `~/.pi/agent`:
-`settings.json` (packages, default model, vim mode via `pi-vim`), the
-`session-pulse` extension, and the `terminal-title` extension, which drops the
-`π - ` prefix from terminal and tmux pane titles. Pi installs any listed
-package that is missing the next time it starts. `settings-extensions.json` is
-only seeded, since the extension settings UI rewrites it. Install pi itself
-separately, then run:
+`roles/pi` installs the [pi coding agent](https://github.com/earendil-works/pi)
+through Volta (with Node 22) and deploys its configuration to `~/.pi/agent`:
+
+- `settings.json`: packages, default model, and vim mode via `pi-vim`. Pi
+  installs any listed package that is missing the next time it starts.
+- `settings-extensions.json`: the powerbar statusline layout.
+- `session-pulse` extension: session summary and workspace digest segments.
+- `terminal-title` extension: drops the `π - ` prefix from terminal and tmux
+  pane titles.
+
+With `cruise: yes` (`cruise.yml`), it also deploys the `poppy-status`
+extension and `~/.local/bin/auth-status` for the Poppy workspace and auth
+statusline segments. Elsewhere those segments stay hidden.
 
 ```
 ansible-playbook setup.yml --tags pi
+ansible-playbook cruise.yml --tags pi
 ```
 
-Credentials, sessions, caches, and workplace-specific extensions and MCP
-servers stay local to each machine.
+Credentials, sessions, caches, and MCP servers stay local to each machine.
